@@ -4,6 +4,7 @@
 
 <script lang="ts">
 import { CSSProperties, defineComponent } from 'vue';
+import { mapGetters } from 'vuex';
 
 export default defineComponent({
   name: 'AppIcon',
@@ -13,7 +14,7 @@ export default defineComponent({
    */
   props: {
     name: { type: String, default: 'favorite' },
-    color: { type: String, default: '#000000' },
+    color: { type: String },
     size: { type: [String, Number], default: 24 },
   },
 
@@ -28,13 +29,26 @@ export default defineComponent({
    * 计算属性
    */
   computed: {
+    ...mapGetters({
+      theme: 'layout/theme',
+    }),
+
     appIconClasses(): Array<string> {
       return ['app-icon'];
     },
     appIconStyles(): CSSProperties {
+      let color;
+
+      if (this.color) {
+        color = this.color;
+      } else {
+        color = this.theme === 'dark' ? '#585858' : '#000000';
+      }
+
       return {
         fontSize: this.size + 'px',
-        color: this.color,
+        color,
+        width: this.size + 'px',
       };
     },
   },

@@ -1,0 +1,33 @@
+.page.light {
+  /* background */
+  --primary-background: #ffffff; /* 主要背景颜色 */
+  --light-background: #f8f8f8;
+  --page-header-background: #ffffff; /* 页面头部背景色 */
+  --page-aside-background: #ffffff; /* 页面侧边栏背景色 */
+
+  /* Text */
+  --primary-text-color: #000000; /* 主要文字颜色 */
+  --secondary-text-color: #585858; /* 次要文字颜色 */
+  --light-text-color: #adadad;
+
+  /* Line */
+  --line-color: #e1e3e7; /* 边框颜色 */
+  --highlight-line-color: #000000; /* 高亮边框颜色  */
+}
+
+.page.dark {
+  /* background */
+  --primary-background: #222222; /* 主要背景颜色 */
+  --light-background: #1f1f1f;
+  --page-header-background: #222222; /* 页面头部背景色 */
+  --page-aside-background: #2e2e2e; /* 页面侧边栏背景色 */
+
+  /* Text */
+  --primary-text-color: #b1b1b1; /* 主要文字颜色 */
+  --secondary-text-color: #585858; /* 次要文字颜色 */
+  --light-text-color: #656565;
+
+  /* Line */
+  --line-color: #383838; /* 边框颜色 */
+  --highlight-line-color: #5555555; /* 高亮边框颜色  */
+}
