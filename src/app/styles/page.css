@@ -6,6 +6,8 @@
   grid-template-areas:
     'a h'
     'a m';
+
+  color: var(--primary-text-color);
 }
 
 .page-header {
@@ -15,6 +17,8 @@
   position: sticky;
   top: 0;
   z-index: 999;
+
+  background: var(--page-header-background);
 }
 
 .page-header > .container {
@@ -35,9 +39,13 @@
   height: 100vh;
   box-sizing: border-box;
   z-index: 999;
+
+  background: var(--page-aside-background);
 }
 
 .page-main {
   grid-area: m;
   padding: 32px;
+
+  background: var(--primary-background);
 }
