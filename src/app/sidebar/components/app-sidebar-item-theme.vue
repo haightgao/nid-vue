@@ -33,7 +33,12 @@ export default defineComponent({
     }),
 
     themeIcon() {
-      return this.theme === 'dark' ? 'wb_sunny' : 'wb_incandescent';
+      if (this.theme === 'dark') {
+        return 'wb_sunny';
+      } else {
+        return 'wb_incandescent';
+      }
+      // return this.theme === 'dark' ? 'wb_sunny' : 'wb_incandescent';
     },
   },
 
