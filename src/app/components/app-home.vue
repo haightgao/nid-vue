@@ -1,7 +1,15 @@
 <template>
   <div>欢迎访问宁皓网：）</div>
+  <div>{{ isLoggedIn }}</div>
 </template>
 
-<script lang="ts">
-export default {};
+<script>
+import { mapGetters } from 'vuex';
+export default {
+  computed: {
+    ...mapGetters({
+      isLoggedIn: 'auth/isLoggedIn',
+    }),
+  },
+};
 </script>

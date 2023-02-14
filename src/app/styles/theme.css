@@ -13,6 +13,10 @@
   /* Line */
   --line-color: #e1e3e7; /* 边框颜色 */
   --highlight-line-color: #000000; /* 高亮边框颜色  */
+
+  /* Button */
+  --primary-button-background: #000000; /* 按钮背景色 */
+  --outline-button-color: #000000; /* 按钮边框颜色 */
 }
 
 .page.dark {
@@ -29,5 +33,9 @@
 
   /* Line */
   --line-color: #383838; /* 边框颜色 */
-  --highlight-line-color: #5555555; /* 高亮边框颜色  */
+  --highlight-line-color: #555555; /* 高亮边框颜色  */
+
+  /* Button */
+  --primary-button-background: #555555; /* 按钮背景色 */
+  --outline-button-color: #555555; /* 按钮边框颜色 */
 }

@@ -4,14 +4,33 @@
   </component>
 </template>
 
-<script lang="ts">
+<script>
+import { mapMutations, mapActions } from 'vuex';
 import AppLayout from '@/app/layout/app-layout.vue';
+import { getStorage } from './app.service';
 
 export default {
   data() {
     return {
       layout: 'AppLayout',
     };
+  },
+
+  created() {
+    const token = getStorage('nid');
+    if (token) {
+      this.setToken(token);
+      this.configApiHttpClientAuthHeader(token);
+    }
+  },
+
+  methods: {
+    ...mapMutations({
+      setToken: 'auth/setToken',
+    }),
+    ...mapActions({
+      configApiHttpClientAuthHeader: 'auth/configApiHttpClientAuthHeader',
+    }),
   },
 
   components: { AppLayout },
@@ -24,4 +43,6 @@ export default {
 @import './styles/theme.css';
 @import './styles/app.css';
 @import './styles/page.css';
+@import './styles/form.css';
+@import './styles/button.css';
 </style>
