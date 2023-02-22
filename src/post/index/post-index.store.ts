@@ -48,7 +48,7 @@ export const postIndexStoreModule: Module<PostIndexStoreState, RootState> = {
         return response;
       } catch (error) {
         commit('setLoading', false);
-        throw error.response;
+        throw (error as any).response;
       }
     },
   },

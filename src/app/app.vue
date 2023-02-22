@@ -22,6 +22,13 @@ export default {
       this.setToken(token);
       this.configApiHttpClientAuthHeader(token);
     }
+
+    // 当前用户
+    const userId = getStorage('uid');
+
+    if (userId) {
+      this.getCurrentUser(userId);
+    }
   },
 
   methods: {
@@ -30,6 +37,7 @@ export default {
     }),
     ...mapActions({
       configApiHttpClientAuthHeader: 'auth/configApiHttpClientAuthHeader',
+      getCurrentUser: 'user/getCurrentUser',
     }),
   },
 

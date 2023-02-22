@@ -68,6 +68,7 @@ export const AuthLoginStoreModule: Module<AuthLoginStoreState, RootState> = {
         dispatch('auth/configApiHttpClientAuthHeader', response.data.token, {
           root: true,
         });
+        dispatch('user/getCurrentUser', response.data.id, { root: true });
 
         return response;
       } catch (error) {
