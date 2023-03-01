@@ -4,6 +4,7 @@ import UserComments from './show/components/user-comments.vue';
 import UserLiked from './show/components/user-liked.vue';
 import UserPosts from './show/components/user-posts.vue';
 import UserReplies from './show/components/user-replies.vue';
+import UserAccount from './account/user-account.vue';
 
 /**
  * 定义路由
@@ -34,6 +35,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'userReplies',
         path: 'replies',
         component: UserReplies,
+      },
+      {
+        name: 'userAccount',
+        path: 'account',
+        component: UserAccount,
       },
     ],
   },

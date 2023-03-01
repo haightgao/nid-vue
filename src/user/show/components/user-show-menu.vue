@@ -12,6 +12,7 @@
 
 <script>
 import { defineComponent } from 'vue';
+import { mapGetters } from 'vuex';
 
 export default defineComponent({
   name: 'UserShowMenu',
@@ -19,7 +20,12 @@ export default defineComponent({
   /**
    * 属性
    */
-  props: {},
+  props: {
+    user: {
+      type: Object,
+      required: true,
+    },
+  },
 
   /**
    * 数据
@@ -52,13 +58,23 @@ export default defineComponent({
           text: '回复',
         },
       ],
+      userAccountItem: {
+        linkTo: {
+          name: 'userAccount',
+        },
+        text: '帐户',
+      },
     };
   },
 
   /**
    * 计算属性
    */
-  computed: {},
+  computed: {
+    ...mapGetters({
+      currentUser: 'user/currentUser',
+    }),
+  },
 
   /**
    * 已创建
@@ -68,9 +84,30 @@ export default defineComponent({
   },
 
   /**
+   * 监视
+   */
+  watch: {
+    user() {
+      if (this.currentUser && this.currentUser.id === this.user.id) {
+        this.addUserAccountItem();
+      } else {
+        this.deleteUserAccountItem();
+      }
+    },
+  },
+
+  /**
    * 组件方法
    */
-  methods: {},
+  methods: {
+    addUserAccountItem() {
+      if (this.menuItems.some(item => item.text === '帐户')) return;
+      this.menuItems = [...this.menuItems, this.userAccountItem];
+    },
+    deleteUserAccountItem() {
+      this.menuItems = this.menuItems.filter(item => item.text !== '帐户');
+    },
+  },
 
   /**
    * 使用组件

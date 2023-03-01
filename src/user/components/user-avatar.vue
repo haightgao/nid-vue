@@ -44,6 +44,8 @@ export default defineComponent({
   computed: {
     ...mapGetters({
       isLoggedIn: 'auth/isLoggedIn',
+      avatarPreviewImage: 'user/account/avatarPreviewImage',
+      currrentUser: 'user/currentUser',
     }),
 
     userAvatarClasses() {
@@ -62,6 +64,14 @@ export default defineComponent({
         avatarSource = `/icons/account-black-32px.svg`;
       }
 
+      if (
+        this.currrentUser &&
+        this.currrentUser.id === this.user.id &&
+        this.avatarPreviewImage
+      ) {
+        avatarSource = this.avatarPreviewImage;
+      }
+
       return avatarSource;
     },
 
@@ -71,7 +81,7 @@ export default defineComponent({
       if (this.link === 'login' && !this.isLoggedIn) {
         linkto = { name: 'login' };
       } else if (this.user) {
-        linkto = { name: 'userShow', params: { userId: this.user.id } };
+        linkto = { name: 'userPosts', params: { userId: this.user.id } };
       } else {
         linkto = '/';
       }

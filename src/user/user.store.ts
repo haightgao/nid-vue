@@ -5,10 +5,15 @@ import {
   userShowStoreModule,
   UserShowStoreState,
 } from './show/user-show.store';
+import {
+  userAccountStoreModule,
+  UserAccountStoreState,
+} from './account/user-account.store';
 
 export interface UserStoreState {
   currentUser: User | null;
   show: UserShowStoreState;
+  accout: UserAccountStoreState;
 }
 
 export const userStoreModule: Module<UserStoreState, RootState> = {
@@ -56,6 +61,7 @@ export const userStoreModule: Module<UserStoreState, RootState> = {
 
         return response;
       } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         throw (error as any).response;
       }
     },
@@ -63,5 +69,6 @@ export const userStoreModule: Module<UserStoreState, RootState> = {
 
   modules: {
     show: userShowStoreModule,
+    account: userAccountStoreModule,
   },
 };

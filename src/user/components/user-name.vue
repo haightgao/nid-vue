@@ -43,7 +43,7 @@ export default defineComponent({
     },
 
     userNameLinkTo() {
-      return { name: 'userShow', params: { userId: this.user.id } };
+      return { name: 'userPosts', params: { userId: this.user.id } };
     },
   },
 
