@@ -49,6 +49,11 @@ export const AuthStoreModule: Module<AuthStoreState, RootState> = {
     configApiHttpClientAuthHeader(_, data) {
       apiHttpClient.defaults.headers.common['Authorization'] = `Bearer ${data}`;
     },
+    logout({commit}){
+      commit('setToken', null)
+      commit('user/setCurrentUser', null, {root: true})
+      commit('auth/login/setLoginResponseData', null, {root: true})
+    }
   },
 
   /**

@@ -29,6 +29,11 @@
   justify-content: flex-end;
 }
 
+.page-header.shadow {
+  box-shadow: 20px 30px 30px rgba(0,0,0,0.1);
+  transition: box-shadow 1s;
+}
+
 .page-aside {
   grid-area: a;
   display: flex;

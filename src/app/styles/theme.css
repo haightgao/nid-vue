@@ -17,6 +17,8 @@
   /* Button */
   --primary-button-background: #000000; /* 按钮背景色 */
   --outline-button-color: #000000; /* 按钮边框颜色 */
+  --lowkey-button-background: #e0e0e0;
+  --lower-button-text-color: #5a5a5a;
 }
 
 .page.dark {
@@ -38,4 +40,6 @@
   /* Button */
   --primary-button-background: #555555; /* 按钮背景色 */
   --outline-button-color: #555555; /* 按钮边框颜色 */
+  --lowkey-button-background: #3b3b3b;
+  --lower-button-text-color: #898989;
 }
