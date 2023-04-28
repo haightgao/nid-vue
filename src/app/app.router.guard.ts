@@ -17,6 +17,7 @@ export const appToolbarItemGuard = (
   switch (to.name) {
     case 'home':
     case 'postIndex':
+    case 'postIndexPopular':
       showPostListLayoutSwitcher = true;
       break;
   }

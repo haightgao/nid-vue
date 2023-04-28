@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URL } from './app.config';
+import queryString, { StringifiableRecord } from 'query-string';
 
 /**
  * HTTP 客户端
@@ -24,3 +25,16 @@ export const getStorage = (key: string) => {
 
   return data ? JSON.parse(data) : null;
 };
+
+/**
+ * 处理地址查询符
+ */
+export const queryStringProcess = (queryStringObject: StringifiableRecord)=>{
+  Object.keys(queryStringObject).forEach((key) => {
+    if(queryStringObject[key] === undefined || queryStringObject[key] === ''){
+      delete queryStringObject[key];
+    }
+  })
+
+  return queryString.stringify(queryStringObject);
+}
