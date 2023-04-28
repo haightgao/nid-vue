@@ -1,12 +1,13 @@
 <template>
   <div :class="postListItemClasses">
     <PostListItemMedia :item="item" />
-    <PostListItemContent :item="item" />
+    <PostListItemContent :item="item" v-if="showPostItemContent" />
   </div>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
+import { mapGetters } from 'vuex';
 import PostListItemMedia from './post-list-item-media.vue';
 import PostListItemContent from './post-list-item-content.vue';
 
@@ -15,8 +16,14 @@ export default defineComponent({
     item: Object,
   },
   computed: {
+    ...mapGetters({
+      layout: 'post/index/layout',
+    }),
     postListItemClasses() {
-      return ['post-list-item', this.item.file.orientation];
+      return ['post-list-item', this.item.file.orientation, this.layout];
+    },
+    showPostItemContent() {
+      return !this.layout.includes('-minimal');
     },
   },
   components: {

@@ -3,6 +3,7 @@ import appRoutes from './app.routes';
 import postRoutes from '@/post/post.routes';
 import authRoutes from '@/auth/auth.routes';
 import userRouters from '@/user/user.routes';
+import { appToolbarItemGuard } from './app.router.guard';
 
 /**
  * 创建路由器
@@ -11,6 +12,8 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [...appRoutes, ...postRoutes, ...authRoutes, ...userRouters],
 });
+
+router.beforeEach(appToolbarItemGuard);
 
 /**
  * 默认导出
