@@ -1,0 +1,27 @@
+.post-show {
+    width: 768px;
+    margin: 0 auto;
+    transition: width 0.5s;
+}
+
+.post-show.flow{
+    width: 100%;
+}
+
+.post-show > .section.meta.actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 32px;
+}
+
+@media (max-width: 838px) {
+    .post-show {
+        width: 100%;
+    }
+}
+
+@media (min-width: 1280px) {
+    .post-show {
+        max-width: 1280px;
+    }
+}

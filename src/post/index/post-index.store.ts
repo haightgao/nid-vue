@@ -2,8 +2,9 @@ import { Module } from 'vuex';
 import { apiHttpClient, queryStringProcess } from '@/app/app.service';
 import { RootState } from '@/app/app.store';
 import { User } from '@/user/show/user-show.store';
-import { API_BASE_URL, POSTS_PER_PAGE } from '@/app/app.config';
+import {  POSTS_PER_PAGE } from '@/app/app.config';
 import { StringifiableRecord } from 'query-string';
+import { postFileProcess } from '@/post/post.service';
 
 export interface PostListItem {
   id: number;
@@ -62,30 +63,7 @@ export const postIndexStoreModule: Module<PostIndexStoreState, RootState> = {
     },
 
     posts(state) {
-      return state.posts.map(post => {
-        let { file } = post;
-        if (file) {
-          const { id: fileId, width, height } = file;
-          const fileBseUrl = `${API_BASE_URL}/files/${fileId}/serve`;
-          const orientation = width > height ? 'horizontal' : 'portrait';
-
-          file = {
-            ...file,
-            orientation,
-            size: {
-              thumbnail: `${fileBseUrl}?size=thumbnail`,
-              medium: `${fileBseUrl}?size=medium`,
-              large: `${fileBseUrl}?size=large`,
-            },
-          };
-
-          post = {
-            ...post,
-            file,
-          };
-        }
-        return post;
-      });
+      return state.posts.map(post => postFileProcess(post));
     },
 
     layout(state) {
