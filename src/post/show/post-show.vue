@@ -43,13 +43,25 @@ export default defineComponent({
     if(layout){
       this.setLayout(layout);
     }
+
+    if(window){
+      window.addEventListener('keyup', this.onKeyUpWindow)
+    }
+  },
+
+  unmounted() {
+    if(window){
+      window.removeEventListener('keyup', this.onKeyUpWindow)
+    }
   },
 
   computed: {
     ...mapGetters({
       loading: 'post/show/loading',
       post: 'post/show/post',
-      layout: 'post/show/layout'
+      layout: 'post/show/layout',
+      sideSheetComponent: 'layout/sideSheetComponent',
+      posts: 'post/index/posts'
     }),
 
     showPost() {
@@ -57,7 +69,7 @@ export default defineComponent({
     },
 
     postShowClasses(){
-      return ['post-show', this.layout]
+      return ['post-show', this.layout, {aside: this.sideSheetComponent}]
     }
   },
 
@@ -70,6 +82,17 @@ export default defineComponent({
     }),
     onClickPostShowMedia(){
       this.setLayout(`${this.layout ? '': 'flow'}`)
+    },
+    onKeyUpWindow(event){
+      switch (event.key){
+        case 'b':
+          if(this.posts.length){
+            this.$router.back()
+          }
+          break
+        default:
+          break
+      }
     }
   },
 

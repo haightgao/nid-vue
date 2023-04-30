@@ -1,7 +1,17 @@
 .post-show {
     width: 768px;
-    margin: 0 auto;
-    transition: width 0.5s;
+    /*margin: 0 auto;*/
+    margin-left: 50%;
+    transform: translateX(-50%);
+    /*transition: width 0.5s;*/
+    transition-property: width, margin, transform;
+    transition-duration: 0.5s;
+    margin-bottom: 32px;
+}
+
+.post-show.aside {
+    margin-left: 0;
+    transform: translateX(0);
 }
 
 .post-show.flow{

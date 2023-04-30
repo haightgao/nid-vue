@@ -1,9 +1,9 @@
 <template>
   <div :class="userAvatarClasses">
     <router-link class="link" :to="userAvatarLinkTo" v-if="link">
-      <img class="image" :src="userAvatarSource" />
+      <img class="image" :src="userAvatarSource" @load="onLoadImage" alt=""/>
     </router-link>
-    <img v-else class="image" :src="userAvatarSource" />
+    <img v-else class="image" :src="userAvatarSource"  alt="" @load="onLoadImage"/>
   </div>
 </template>
 
@@ -35,7 +35,9 @@ export default defineComponent({
    * 数据
    */
   data() {
-    return {};
+    return {
+      loading: true,
+    };
   },
 
   /**
@@ -45,7 +47,7 @@ export default defineComponent({
     ...mapGetters({
       isLoggedIn: 'auth/isLoggedIn',
       avatarPreviewImage: 'user/account/avatarPreviewImage',
-      currrentUser: 'user/currentUser',
+      currentUser: 'user/currentUser',
     }),
 
     userAvatarClasses() {
@@ -53,6 +55,7 @@ export default defineComponent({
         'user-avatar',
         this.size,
         { fade: !this.isLoggedIn && !this.user },
+        {loading: this.loading}
       ];
     },
 
@@ -65,8 +68,8 @@ export default defineComponent({
       }
 
       if (
-        this.currrentUser &&
-        this.currrentUser.id === this.user.id &&
+        this.currentUser &&
+        this.currentUser.id === this.user.id &&
         this.avatarPreviewImage
       ) {
         avatarSource = this.avatarPreviewImage;
@@ -76,16 +79,16 @@ export default defineComponent({
     },
 
     userAvatarLinkTo() {
-      let linkto;
+      let linkTo;
 
       if (this.link === 'login' && !this.isLoggedIn) {
-        linkto = { name: 'login' };
+        linkTo = { name: 'login' };
       } else if (this.user) {
-        linkto = { name: 'userPosts', params: { userId: this.user.id } };
+        linkTo = { name: 'userPosts', params: { userId: this.user.id } };
       } else {
-        linkto = '/';
+        linkTo = '/';
       }
-      return linkto;
+      return linkTo;
     },
   },
 
@@ -99,7 +102,11 @@ export default defineComponent({
   /**
    * 组件方法
    */
-  methods: {},
+  methods: {
+    onLoadImage(){
+      this.loading = false;
+    }
+  },
 
   /**
    * 使用组件

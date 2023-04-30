@@ -3,6 +3,7 @@ import { RootState } from '@/app/app.store';
 
 export interface LayoutStoreState {
   theme: string;
+  sideSheetComponent: string;
 }
 
 export const LayoutStoreModule: Module<LayoutStoreState, RootState> = {
@@ -16,6 +17,7 @@ export const LayoutStoreModule: Module<LayoutStoreState, RootState> = {
    */
   state: {
     theme: 'light',
+    sideSheetComponent: '',
   } as LayoutStoreState,
 
   /**
@@ -25,6 +27,10 @@ export const LayoutStoreModule: Module<LayoutStoreState, RootState> = {
     theme(state) {
       return state.theme;
     },
+
+    sideSheetComponent(state) {
+      return state.sideSheetComponent;
+    }
   },
 
   /**
@@ -34,6 +40,14 @@ export const LayoutStoreModule: Module<LayoutStoreState, RootState> = {
     setTheme(state, data) {
       state.theme = data;
     },
+
+    setSideSheetComponent(state, data) {
+      state.sideSheetComponent = data;
+    },
+
+    resetSideSheet(state) {
+      state.sideSheetComponent = '';
+    }
   },
 
   /**
