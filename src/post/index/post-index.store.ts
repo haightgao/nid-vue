@@ -141,8 +141,13 @@ export const postIndexStoreModule: Module<PostIndexStoreState, RootState> = {
 
   actions: {
     async getPosts({ commit, state, dispatch }, options: GetPostOptions = {}) {
+      let getPostsQueryString = '';
 
-      const getPostsQueryString = await dispatch('getPostsPreProcess', options);
+      if(Object.keys(options).length){
+        getPostsQueryString = await dispatch('getPostsPreProcess', options);
+      }else{
+        getPostsQueryString = state.queryString
+      }
 
       try {
         const response = await apiHttpClient.get(

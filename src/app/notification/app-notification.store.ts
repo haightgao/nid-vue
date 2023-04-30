@@ -29,8 +29,10 @@ export const appNotificationStoreModule: Module<
   },
 
   mutations: {
-    setMessage(state, data) {
-      state.messages = [data, ...state.messages];
+    addMessage(state, data) {
+      if(!state.messages.some(message => message.content === data.content)){
+        state.messages = [data, ...state.messages];
+      }
     },
 
     deleteMessage(state, data) {
@@ -46,7 +48,7 @@ export const appNotificationStoreModule: Module<
         id,
         ...data,
       };
-      commit('setMessage', message);
+      commit('addMessage', message);
 
       dispatch('dismissMessage', message);
     },

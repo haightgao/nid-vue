@@ -1,6 +1,6 @@
 <template>
-  <div class="post-show-media">
-    <img :src="post.file.size.large" alt="" class="image">
+  <div :class="postShowMediaClasses">
+    <img :src="post.file.size.large" alt="" class="image" @load="onLoadImage">
   </div>
 </template>
 
@@ -13,6 +13,24 @@ export default defineComponent({
   props: {
     post: {
       type: Object
+    }
+  },
+
+  data(){
+    return {
+      loading: true,
+    }
+  },
+
+  computed: {
+    postShowMediaClasses(){
+      return ['post-show-media', {loading: this.loading}]
+    }
+  },
+
+  methods: {
+    onLoadImage(){
+      this.loading = false;
     }
   }
 })

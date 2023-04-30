@@ -3,6 +3,7 @@ import { apiHttpClient } from '../../app/app.service';
 import { RootState } from '../../app/app.store';
 import { User } from '@/user/show/user-show.store';
 import { postFileProcess } from '@/post/post.service';
+import appRouter from '@/app/app.router'
 
 export interface Post {
   id: number;
@@ -56,6 +57,30 @@ export const postShowStoreModule: Module<PostShowStoreState, RootState> = {
 
     layout(state) {
       return state.layout
+    },
+
+    currentPostIndex(state, _, rootState) {
+      return rootState.post.index.posts.findIndex(item => item.id === state.post.id)
+    },
+
+    prevPost(_, getters, rootState) {
+      return rootState.post.index.posts[getters.currentPostIndex - 1]
+    },
+
+    nextPost(_, getters, rootState) {
+      return rootState.post.index.posts[getters.currentPostIndex + 1]
+    },
+
+    canNavigateBack(_, getters, rootState) {
+      return rootState.post.index.posts.length > 0 && getters.currentPostIndex > 0
+    },
+
+    canNavigateForward(_, getters, rootState) {
+      return rootState.post.index.posts.length > 0 && rootState.post.index.posts.length !== getters.currentPostIndex + 1
+    },
+
+    canGetMorePosts(_, getters, rootState, rootGetters) {
+      return rootGetters['post/index/hasMore'] && rootState.post.index.posts.length - getters.currentPostIndex < 3
     }
   },
 
@@ -89,5 +114,51 @@ export const postShowStoreModule: Module<PostShowStoreState, RootState> = {
         throw error.response;
       }
     },
+
+    async goGetPrevPost({getters, dispatch}){
+      if(!getters.canNavigateBack){
+        return
+      }
+
+      try {
+        const response = await dispatch('getPostById', getters.prevPost.id);
+
+        if(getters.prevPost){
+          appRouter.replace({
+            name: 'postShow',
+            params: {postId: getters.prevPost.id}
+          })
+        }
+
+        return response
+      }catch (error){
+        throw error.response;
+      }
+    },
+
+    async goGetNextPost({getters, dispatch}){
+      if(!getters.canNavigateForward){
+        return
+      }
+
+      if(getters.canGetMorePosts){
+        dispatch('post/index/getPosts', {}, {root: true})
+      }
+
+      try {
+        const response = await dispatch('getPostById', getters.nextPost.id);
+
+        if(getters.nextPost){
+          await appRouter.replace({
+            name: 'postShow',
+            params: { postId: getters.nextPost.id }
+          })
+        }
+
+        return response
+      }catch (error){
+        throw error.response;
+      }
+    }
   },
 };
