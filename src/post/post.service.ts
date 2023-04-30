@@ -30,3 +30,17 @@ export const postFileProcess = (post: Post) => {
 
   return post
 }
+
+export const filterProcess = (filterObject: {[name: string]: string}) =>{
+  const allowedFilterNames = ['tag','user','action']
+
+  Object.keys(filterObject).forEach((filterName) => {
+    const allowed = allowedFilterNames.some(allowedFilterName => allowedFilterName === filterName);
+
+    if(!allowed){
+      delete filterObject[filterName]
+    }
+  })
+
+  return filterObject
+}
