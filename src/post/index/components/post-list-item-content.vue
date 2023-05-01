@@ -27,7 +27,9 @@
 
       <div class="action">
         <div class="icon">
-          <AppIcon name="comment" />
+          <button class="button basic" @click="onClickCommentButton">
+            <AppIcon name="comment" />
+          </button>
         </div>
         <div class="text">
           {{ item.totalComments }}
@@ -39,6 +41,7 @@
 
 <script>
 import { defineComponent } from 'vue';
+import {mapMutations} from 'vuex';
 import UserAvatar from '@/user/components/user-avatar.vue';
 import UserName from '@/user/components/user-name.vue';
 import AppIcon from '@/app/components/app-icon.vue';
@@ -53,6 +56,17 @@ export default defineComponent({
     itemLinkTo() {
       return { name: 'postShow', params: { postId: this.item.id } };
     },
+  },
+
+  methods: {
+    ...mapMutations({
+      setSideSheetComponent: 'layout/setSideSheetComponent',
+      setSideSheetProps: 'layout/setSideSheetProps'
+    }),
+    onClickCommentButton(){
+      this.setSideSheetComponent('CommentSideSheet');
+      this.setSideSheetProps({filter: {post: this.item.id}});
+    }
   },
 
   components: { UserAvatar, UserName, AppIcon },

@@ -41,16 +41,32 @@ export default defineComponent({
     })
   },
 
+  created() {
+    if(this.sideSheetComponent){
+      this.setSideSheetProps({
+        filter: {
+          post: this.post.id
+        }
+      })
+    }
+  },
+
   methods: {
     ...mapMutations({
       setSideSheetComponent: 'layout/setSideSheetComponent',
-      resetSideSheet: 'layout/resetSideSheet'
+      resetSideSheet: 'layout/resetSideSheet',
+      setSideSheetProps: 'layout/setSideSheetProps'
     }),
     onClickCommentButton(){
       if(this.sideSheetComponent){
         this.resetSideSheet();
       }else {
         this.setSideSheetComponent('CommentSideSheet');
+        this.setSideSheetProps({
+          filter: {
+            post: this.post.id
+          }
+        })
       }
     }
   },
