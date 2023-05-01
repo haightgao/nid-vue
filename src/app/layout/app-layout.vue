@@ -4,13 +4,13 @@
     <PageAside />
     <div class="page-main">
       <slot></slot>
-      <PageSideSheet/>
+      <PageSideSheet @scroll="onScrollPageSideSheet" ref="pageSideSheet"/>
     </div>
     <AppNotification />
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from 'vue';
 import { mapGetters, mapMutations } from 'vuex';
 import PageHeader from './components/page-header.vue';
@@ -61,7 +61,16 @@ export default defineComponent({
   methods: {
     ...mapMutations({
       setTheme: 'layout/setTheme',
+      setSideSheetTouchdown: 'layout/setSideSheetTouchdown'
     }),
+
+    onScrollPageSideSheet() {
+      const { scrollTop, scrollHeight, clientHeight } = this.$refs.pageSideSheet.$el;
+
+      if (clientHeight + scrollTop === scrollHeight) {
+        this.setSideSheetTouchdown(true);
+      }
+    }
   },
 
   /**

@@ -5,6 +5,7 @@ export interface LayoutStoreState {
   theme: string;
   sideSheetComponent: string;
   sideSheetProps: any;
+  sideSheetTouchdown: boolean;
 }
 
 export const LayoutStoreModule: Module<LayoutStoreState, RootState> = {
@@ -20,6 +21,7 @@ export const LayoutStoreModule: Module<LayoutStoreState, RootState> = {
     theme: 'light',
     sideSheetComponent: '',
     sideSheetProps: null,
+    sideSheetTouchdown: false,
   } as LayoutStoreState,
 
   /**
@@ -36,6 +38,10 @@ export const LayoutStoreModule: Module<LayoutStoreState, RootState> = {
 
     sideSheetProps(state){
       return state.sideSheetProps
+    },
+
+    sideSheetTouchdown(state) {
+      return state.sideSheetTouchdown;
     }
   },
 
@@ -58,6 +64,10 @@ export const LayoutStoreModule: Module<LayoutStoreState, RootState> = {
 
     setSideSheetProps(state, data) {
       state.sideSheetProps = data;
+    },
+
+    setSideSheetTouchdown(state, data) {
+      state.sideSheetTouchdown = data;
     }
   },
 

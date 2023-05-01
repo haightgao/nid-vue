@@ -6,10 +6,10 @@
     <div class="content">
       <TextareaField placeholder="发表评论" v-model="content" @keydown="onKeyDownCommentTextarea" />
       <div class="actions">
-        <button class="button" v-if="currentUser" @click="onClickCancelButton">取消</button>
-        <button class="button" v-if="currentUser" @click="onClickSubmitButton">发布</button>
-        <button class="button" v-if="!currentUser" @click="onClickRegisterButton">注册</button>
-        <button class="button" v-if="!currentUser" @click="onClickLoginButton">登录</button>
+        <button class="button pill" v-if="currentUser" @click="onClickCancelButton">取消</button>
+        <button class="button pill" v-if="currentUser" @click="onClickSubmitButton">发布</button>
+        <button class="button pill" v-if="!currentUser" @click="onClickRegisterButton">注册</button>
+        <button class="button pill" v-if="!currentUser" @click="onClickLoginButton">登录</button>
       </div>
     </div>
   </div>
@@ -44,8 +44,12 @@ export default defineComponent({
       createComment: 'comment/create/createComment'
     }),
     async submitComment(){
+      if(!this.content.trim()){
+        return
+      }
+
       if(!this.currentUser){
-        this.pushMessage(({content: '请先登录'}))
+        await this.pushMessage(({ content: '请先登录' }))
         return
       }
 
@@ -57,7 +61,7 @@ export default defineComponent({
 
         this.content = ''
       }catch (error){
-        this.pushMessage({content: error.data.message})
+        await this.pushMessage({ content: error.data.message })
       }
     },
     onClickCancelButton(){

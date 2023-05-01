@@ -53,6 +53,9 @@ export const commentIndexStoreModule: Module<CommentIndexStoreState, RootState> 
         },
         comments(state){
             return state.comments
+        },
+        hasMore(state){
+            return state.totalPages - state.nextPage >= 0
         }
     },
 
@@ -84,6 +87,10 @@ export const commentIndexStoreModule: Module<CommentIndexStoreState, RootState> 
 
         setTotalPages(state, data) {
             state.totalPages = data
+        },
+
+        removeCommentItem(state, data){
+            state.comments = state.comments.filter(item => item.id !== data)
         }
     },
 
@@ -144,6 +151,8 @@ export const commentIndexStoreModule: Module<CommentIndexStoreState, RootState> 
             commit('setTotalPages', totalPages)
 
             commit('setNextPage')
+
+            commit('layout/setSideSheetTouchdown', false, {root: true})
         }
     }
 }

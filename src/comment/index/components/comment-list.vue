@@ -1,6 +1,9 @@
 <template>
   <div class="comment-list">
     <CommentListItem v-for="item in comments" :key="item.id" :item="item"/>
+    <template v-if="loading">
+      <CommentListItemSkeleton v-for="number in 20" :key="number" />
+    </template>
   </div>
 </template>
 
@@ -8,10 +11,11 @@
 import {defineComponent} from 'vue';
 import {mapGetters, mapActions} from 'vuex';
 import CommentListItem from '@/comment/index/components/comment-list-item.vue';
+import CommentListItemSkeleton from '@/comment/index/components/comment-list-item-skeleton.vue';
 
 export default defineComponent({
   name: 'CommentList',
-  components: { CommentListItem },
+  components: { CommentListItemSkeleton, CommentListItem },
   props: {
     filter: {
       type: Object
@@ -21,7 +25,9 @@ export default defineComponent({
   computed: {
     ...mapGetters({
       loading: 'comment/index/loading',
-      comments: 'comment/index/comments'
+      comments: 'comment/index/comments',
+      hasMore: 'comment/index/hasMore',
+      sideSheetTouchdown: 'layout/sideSheetTouchdown'
     })
   },
 
@@ -32,12 +38,25 @@ export default defineComponent({
   watch: {
     filter(){
       this.getComments({filter: this.filter})
+    },
+
+    sideSheetTouchdown(newValue) {
+
+      if(newValue && this.hasMore && !this.loading){
+       try{
+         console.log('watch sideSheetTouchdown')
+         this.getComments({filter: this.filter})
+       } catch (error){
+         this.pushMessage({content: error.data.message})
+       }
+      }
     }
   },
 
   methods: {
     ...mapActions({
-      getComments: 'comment/index/getComments'
+      getComments: 'comment/index/getComments',
+      pushMessage: 'notification/pushMessage',
     })
   }
 });
