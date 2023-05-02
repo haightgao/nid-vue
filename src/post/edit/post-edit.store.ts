@@ -2,24 +2,26 @@ import {Module} from 'vuex';
 import {RootState} from '@/app/app.store';
 import {apiHttpClient} from '@/app/app.service';
 
-export interface PostCreateStoreState {
+export interface PostEditStoreState {
   loading: boolean;
 }
 
-export interface CreatePostData {
-  title: string;
+export interface UpdatePostData{
+  title?: string;
   content?: string;
 }
-export interface CreatePostOptions {
-  data?: CreatePostData;
+
+export interface UpdatePostOptions {
+  postId?: number;
+  data?: UpdatePostData;
 }
 
-export const postCreateStoreModule: Module<PostCreateStoreState, RootState> = {
+export const postEditStoreModule: Module<PostEditStoreState, RootState> = {
   namespaced: true,
 
   state: {
     loading: false
-  } as PostCreateStoreState,
+  } as PostEditStoreState,
 
   getters: {
     loading(state) {
@@ -34,13 +36,13 @@ export const postCreateStoreModule: Module<PostCreateStoreState, RootState> = {
   },
 
   actions: {
-    async createPost({commit}, options: CreatePostOptions) {
+    async updatePost({commit}, options: UpdatePostOptions) {
       commit('setLoading', true);
 
-      const {data} = options
+      const {postId, data} = options
 
       try {
-        const response = await apiHttpClient.post(`posts`, data);
+        const response = await apiHttpClient.patch(`posts/${postId}`, data);
         commit('setLoading', false);
         return response;
       } catch (e) {

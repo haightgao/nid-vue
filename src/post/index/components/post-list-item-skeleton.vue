@@ -1,6 +1,6 @@
 <template>
   <div :class="postListItemClasses">
-    <div class="post-list-item-media">1</div>
+    <div class="post-list-item-media"></div>
     <div class="post-list-item-content" v-if="showPostListItemContent">
       <div class="thumbnail"></div>
       <div class="header">

@@ -5,12 +5,12 @@
       :type="type"
       :value="modelValue"
       :placeholder="placeholder"
-      @input="onInputHanlde"
+      @input="$emit('update:modelValue', $event.target.value.trim())"
     />
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -59,9 +59,6 @@ export default defineComponent({
    * 组件方法
    */
   methods: {
-    onInputHanlde(event: Event) {
-      this.$emit('update:modelValue', (event.target as HTMLInputElement).value);
-    },
   },
 
   /**

@@ -2,7 +2,7 @@ import { Module } from 'vuex';
 import { apiHttpClient, queryStringProcess } from '@/app/app.service';
 import { RootState } from '@/app/app.store';
 import { User } from '@/user/show/user-show.store';
-import {  POSTS_PER_PAGE } from '@/app/app.config';
+import { POSTS_PER_PAGE } from '@/app/app.config';
 import { StringifiableRecord } from 'query-string';
 import { postFileProcess } from '@/post/post.service';
 
@@ -39,15 +39,15 @@ export interface PostIndexStoreState {
   nextPage: number;
   totalPages: number;
   queryString: string;
-  filter: {[name: string]: string} | null;
+  filter: { [name: string]: string } | null;
 }
 
 export interface GetPostOptions {
   sort?: string;
-  filter?: {[name: string]: string};
+  filter?: { [name: string]: string };
 }
 
-export interface FilterItem{
+export interface FilterItem {
   title?: string;
   value?: string;
 }
@@ -61,7 +61,7 @@ export const postIndexStoreModule: Module<PostIndexStoreState, RootState> = {
     layout: '',
     nextPage: 1,
     totalPages: 1,
-    queryString:'',
+    queryString: '',
     filter: null,
   } as PostIndexStoreState,
 
@@ -71,7 +71,9 @@ export const postIndexStoreModule: Module<PostIndexStoreState, RootState> = {
     },
 
     posts(state) {
-      return state.posts.map(post => postFileProcess(post));
+      return state.posts
+        .map(post => postFileProcess(post))
+        .filter(post => post.file);
     },
 
     layout(state) {
@@ -82,27 +84,27 @@ export const postIndexStoreModule: Module<PostIndexStoreState, RootState> = {
       return state.totalPages - state.nextPage >= 0;
     },
 
-    filterItems(state){
+    filterItems(state) {
       const items: Array<FilterItem> = [];
 
-      if(state.filter){
+      if (state.filter) {
         Object.keys(state.filter).forEach(filterName => {
-          const item: FilterItem = {}
+          const item: FilterItem = {};
 
           switch (filterName) {
             case 'tag':
               item.title = '标签';
-              break
+              break;
           }
 
-          if(item.title && state.filter){
-            item.value = state.filter[filterName]
-            items.push(item)
+          if (item.title && state.filter) {
+            item.value = state.filter[filterName];
+            items.push(item);
           }
-        })
+        });
       }
       return items;
-    }
+    },
   },
 
   mutations: {
@@ -130,23 +132,23 @@ export const postIndexStoreModule: Module<PostIndexStoreState, RootState> = {
       state.totalPages = data;
     },
 
-    setQueryString(state, data){
+    setQueryString(state, data) {
       state.queryString = data;
     },
 
-    setFilter(state, data){
+    setFilter(state, data) {
       state.filter = data;
-    }
+    },
   },
 
   actions: {
     async getPosts({ commit, state, dispatch }, options: GetPostOptions = {}) {
       let getPostsQueryString = '';
 
-      if(Object.keys(options).length){
+      if (Object.keys(options).length) {
         getPostsQueryString = await dispatch('getPostsPreProcess', options);
-      }else{
-        getPostsQueryString = state.queryString
+      } else {
+        getPostsQueryString = state.queryString;
       }
 
       try {
@@ -163,23 +165,23 @@ export const postIndexStoreModule: Module<PostIndexStoreState, RootState> = {
       }
     },
 
-    getPostsPreProcess({commit, state}, options: GetPostOptions = {}){
+    getPostsPreProcess({ commit, state }, options: GetPostOptions = {}) {
       commit('setLoading', true);
       commit('setFilter', options.filter || null);
 
       const getPostsQueryObject: StringifiableRecord = {
         sort: options.sort,
         ...state.filter,
-      }
+      };
 
       const getPostsQueryString = queryStringProcess(getPostsQueryObject);
 
-      if(getPostsQueryString !== state.queryString){
-        commit('setNextPage',1);
+      if (getPostsQueryString !== state.queryString) {
+        commit('setNextPage', 1);
       }
 
       commit('setQueryString', getPostsQueryString);
-      return getPostsQueryString
+      return getPostsQueryString;
     },
 
     getPostsPostProcess({ commit, state }, response) {

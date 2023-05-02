@@ -1,6 +1,8 @@
 <template>
   <div class="app-sidebar-item add">
-    <AppIcon name="add_a_photo" />
+    <router-link :to="{name: 'postCreate'}" class="link">
+      <AppIcon name="add_a_photo" />
+    </router-link>
   </div>
 </template>
 
