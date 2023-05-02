@@ -26,7 +26,7 @@ export default defineComponent({
 
   props: {
     postId: {
-      type: String
+      type: Number
     }
   },
 

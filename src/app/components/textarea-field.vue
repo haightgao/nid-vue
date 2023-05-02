@@ -4,7 +4,7 @@
               :value="modelValue"
               :placeholder="placeholder"
               :rows="rows"
-              @input="$emit('update:modelValue', $event.target.value.trim())"
+              @input="onInputTextarea"
     ></textarea>
   </div>
 </template>
@@ -28,6 +28,25 @@ export default defineComponent({
     },
   },
 
-  emits: ['update:modelValue'],
+  data(){
+    return {
+      value: ''
+    }
+  },
+
+  emits: ['update:modelValue','dirty'],
+
+  methods: {
+    onInputTextarea(event){
+      const value = event.target.value.trim()
+
+      if(this.value !== value){
+        this.$emit('dirty')
+      }
+
+      this.value = value
+      this.$emit('update:modelValue', event.target.value.trim())
+    }
+  }
 });
 </script>
