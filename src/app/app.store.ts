@@ -16,6 +16,7 @@ import {
 import { fileStoreModule, FileStoreState } from '@/file/file.store';
 import { commentStoreModule, CommentStoreState } from '@/comment/comment.store';
 import { replyStoreModule, ReplyStoreState } from '@/reply/reply.store';
+import { likeStoreModule, LikeStoreState } from '@/like/like.store';
 
 export interface RootState {
   appName: string;
@@ -28,6 +29,7 @@ export interface RootState {
   file: FileStoreState;
   comment: CommentStoreState;
   reply: ReplyStoreState;
+  like: LikeStoreState;
 }
 
 /**
@@ -48,6 +50,7 @@ const store = createStore({
     file: fileStoreModule,
     comment: commentStoreModule,
     reply: replyStoreModule,
+    like: likeStoreModule,
   },
 
   plugins: [localStoragePlugin],

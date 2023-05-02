@@ -1,6 +1,6 @@
 import { Module } from 'vuex';
-import { apiHttpClient } from '../../app/app.service';
-import { RootState } from '../../app/app.store';
+import { apiHttpClient } from '@/app/app.service';
+import { RootState } from '@/app/app.store';
 import { User } from '@/user/show/user-show.store';
 import { postFileProcess } from '@/post/post.service';
 import appRouter from '@/app/app.router'
@@ -12,6 +12,7 @@ export interface Post {
   user: User;
   totalComments: number;
   totalLikes: number;
+  liked: number;
   file: {
     id: number;
     width: number;
@@ -95,6 +96,31 @@ export const postShowStoreModule: Module<PostShowStoreState, RootState> = {
 
     setLayout(state, data) {
       state.layout = data;
+    },
+
+    setPostLiked(state, data){
+      const {postId, liked} = data
+
+      if(state.post.id === postId){
+        state.post.liked = liked
+      }
+    },
+
+    setPostTotalLikes(state, data){
+      const {postId, actionType} = data
+
+      if(state.post.id === postId){
+        switch (actionType){
+          case 'increment':
+            state.post.totalLikes++
+            break
+          case 'decrement':
+            state.post.totalLikes--
+            break
+          default:
+            break
+        }
+      }
     }
   },
 
