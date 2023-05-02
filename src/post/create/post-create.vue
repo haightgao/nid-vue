@@ -3,7 +3,14 @@
     <PostTitleField />
     <PostContentField />
     <PostTagField :postId="postId" v-if="postId" />
-    <PostActions @update="submitUpdatePost" @create="submitCreatePost" />
+    <PostActions
+      @update="submitUpdatePost"
+      @create="submitCreatePost"
+      @delete="onDeletePost"
+      size="large"
+      :useDeleteButton="postId ? true: false"
+    />
+    <PostMeta :post="post" v-if="postId && post" />
   </div>
 </template>
 
@@ -14,6 +21,7 @@ import PostTagField from '@/post/components/post-tag-field.vue';
 import PostTitleField from '@/post/components/post-title-field.vue';
 import PostContentField from '@/post/components/post-content-field.vue';
 import PostActions from '@/post/components/post-actions.vue';
+import PostMeta from '@/post/components/post-meta.vue';
 
 export default defineComponent({
   name: 'PostCreate',
@@ -56,6 +64,7 @@ export default defineComponent({
       pushMessage: 'notification/pushMessage',
       getPostById: 'post/show/getPostById',
       updatePost: 'post/edit/updatePost',
+      deletePost: 'post/destroy/deletePost'
     }),
 
     ...mapMutations({
@@ -82,6 +91,7 @@ export default defineComponent({
           query: { post: this.postId },
         });
         this.setUnsaved(false)
+        await this.getPost(this.postId)
       } catch (error) {
         await this.pushMessage({
           content: error.data.message,
@@ -121,13 +131,26 @@ export default defineComponent({
           },
         });
         this.setUnsaved(false)
+        await this.getPost(this.postId)
       } catch (error) {
-        this.pushMessage({ content: error.data.message });
+        await this.pushMessage({ content: error.data.message });
       }
     },
+
+    async onDeletePost(){
+      try{
+        await this.deletePost({postId: this.postId})
+
+        this.$router.push({
+          name: 'postCreate'
+        })
+      }catch(error){
+        await this.pushMessage({ content: error.data.message });
+      }
+    }
   },
 
-  components: { PostActions, PostContentField, PostTitleField, PostTagField },
+  components: { PostMeta, PostActions, PostContentField, PostTitleField, PostTagField },
 });
 </script>
 

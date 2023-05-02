@@ -1,7 +1,7 @@
 <template>
   <div class="post-show-header">
     <div class="content">
-      <h1 class="text">{{post.title}}</h1>
+      <h1 class="text" @click="onClickPostTitle">{{post.title}}</h1>
       <div class="meta">
         <UserName :user="post.user" />
       </div>
@@ -23,6 +23,14 @@ export default defineComponent({
   props:{
     post: {
       type: Object
+    }
+  },
+
+  emits: ['click'],
+
+  methods: {
+    onClickPostTitle(){
+      this.$emit('click')
     }
   },
 

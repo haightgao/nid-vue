@@ -1,5 +1,8 @@
 <template>
   <div class="post-actions">
+    <button :class="deleteButtonClasses" @click="onClickDeleteButton" v-if="useDeleteButton">
+      {{deleteButtonText}}
+    </button>
     <button :class="submitButtonClasses" @click="onClickSubmitButton">
       {{ submitButtonText }}
     </button>
@@ -16,6 +19,16 @@ export default defineComponent({
   props: {
     size: {
       type: String
+    },
+    useDeleteButton: {
+      type: Boolean
+    }
+  },
+
+  data(){
+    return {
+      confirmDelete: false,
+      timeoutId: null,
     }
   },
 
@@ -32,10 +45,18 @@ export default defineComponent({
 
     submitButtonClasses(){
       return ['button',this.size, {outline: this.unsaved}]
+    },
+
+    deleteButtonText(){
+      return this.confirmDelete ? '确认删除' : '删除'
+    },
+
+    deleteButtonClasses(){
+      return ['button', this.size, 'red', {outline: !this.confirmDelete}]
     }
   },
 
-  emits: ['update', 'create'],
+  emits: ['update', 'create','delete'],
 
   methods: {
     onClickSubmitButton() {
@@ -46,6 +67,24 @@ export default defineComponent({
         this.$emit('create');
       }
     },
+
+    onClickDeleteButton (){
+      if(this.timeoutId){
+        clearInterval(this.timeoutId)
+      }
+
+      if(this.confirmDelete){
+        this.$emit('delete')
+      }
+
+      this.confirmDelete = !this.confirmDelete;
+
+      if(this.confirmDelete){
+        this.timeoutId = setTimeout(()=>{
+          this.confirmDelete = false
+        },3000)
+      }
+    }
   }
 })
 </script>

@@ -6,9 +6,10 @@
       <PostShowFileMeta :post="post" />
       <PostShowActions :post="post" />
     </div>
-    <PostShowHeader :post="post" />
+    <PostShowHeader :post="post" @click="onClickPostHeader"/>
     <PostShowContent :post="post" />
     <PostShowTags v-if="post.tags" :tags="post.tags" />
+    <PostShowEdit :post="post" v-if="showPostEdit" />
   </div>
 </template>
 
@@ -23,6 +24,7 @@ import PostShowActions from '@/post/show/components/post-show-actions.vue';
 import PostShowFileMeta from '@/post/show/components/post-show-file-meta.vue';
 import PostShowTags from '@/post/show/components/post-show-tags.vue';
 import PostShowSkeleton from '@/post/show/components/post-show-skeleton.vue';
+import PostShowEdit from '@/post/show/components/post-show-edit.vue';
 
 export default defineComponent({
   title() {
@@ -33,6 +35,12 @@ export default defineComponent({
 
   props: {
     postId: String,
+  },
+
+  data(){
+    return {
+      showPostEdit: false
+    }
   },
 
   created() {
@@ -93,10 +101,14 @@ export default defineComponent({
         default:
           break
       }
+    },
+
+    onClickPostHeader(){
+      this.showPostEdit = !this.showPostEdit
     }
   },
 
-  components: { PostShowSkeleton, PostShowContent, PostShowMedia,PostShowHeader,PostShowActions,PostShowFileMeta,PostShowTags}
+  components: { PostShowEdit, PostShowSkeleton, PostShowContent, PostShowMedia,PostShowHeader,PostShowActions,PostShowFileMeta,PostShowTags}
 });
 </script>
 
