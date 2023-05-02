@@ -27,7 +27,8 @@ export default defineComponent({
       loading: 'comment/index/loading',
       comments: 'comment/index/comments',
       hasMore: 'comment/index/hasMore',
-      sideSheetTouchdown: 'layout/sideSheetTouchdown'
+      sideSheetTouchdown: 'layout/sideSheetTouchdown',
+      userShowTouchDown: 'user/show/touchDown'
     })
   },
 
@@ -50,7 +51,20 @@ export default defineComponent({
          this.pushMessage({content: error.data.message})
        }
       }
+    },
+
+    userShowTouchDown(newValue) {
+
+      if(newValue && this.hasMore && !this.loading){
+        try{
+          console.log('watch sideSheetTouchdown')
+          this.getComments({filter: this.filter})
+        } catch (error){
+          this.pushMessage({content: error.data.message})
+        }
+      }
     }
+
   },
 
   methods: {

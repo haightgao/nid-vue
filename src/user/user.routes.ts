@@ -48,11 +48,27 @@ const routes: Array<RouteRecordRaw> = [
         name: 'userComments',
         path: 'comments',
         component: UserComments,
+        props: route => {
+          return {
+            filter: {
+              user: route.params.userId,
+              action: 'published'
+            }
+          }
+        }
       },
       {
         name: 'userReplies',
         path: 'replies',
         component: UserReplies,
+        props: route => {
+          return {
+            filter: {
+              user: route.params.userId,
+              action: 'replied'
+            }
+          }
+        }
       },
       {
         name: 'userAccount',

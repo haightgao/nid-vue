@@ -1,5 +1,5 @@
 import { Module } from 'vuex';
-import { RootState } from '@/app/app.store'
+import { RootState } from '@/app/app.store';
 import { apiHttpClient, queryStringProcess } from '@/app/app.service';
 import { filterProcess } from '@/post/post.service';
 import { StringifiableRecord } from 'query-string';
@@ -69,8 +69,7 @@ export const commentIndexStoreModule: Module<CommentIndexStoreState, RootState> 
         },
 
         setFilter(state, data) {
-            const filter = filterProcess(data)
-            state.filter = filter
+            state.filter = filterProcess(data)
         },
 
         setQueryString(state, data) {
@@ -177,6 +176,8 @@ export const commentIndexStoreModule: Module<CommentIndexStoreState, RootState> 
             commit('setNextPage')
 
             commit('layout/setSideSheetTouchdown', false, {root: true})
+
+            commit('user/show/setTouchDown', false, {root: true})
         }
     }
 }

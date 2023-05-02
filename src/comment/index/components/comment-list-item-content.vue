@@ -1,6 +1,16 @@
 <template>
   <div class="comment-list-item-content">
-    {{item.content}}
+    <div class="quote" v-if="item.repliedComment">
+      {{ item.repliedComment.content }}
+    </div>
+    <div class="content">
+      {{item.content}}
+    </div>
+    <div class="meta" v-if="item.post">
+      <router-link class="link" :to="postTitleLinkTo">
+        # {{ item.post.title }}
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -13,6 +23,17 @@ export default defineComponent({
   props: {
     item: {
       type: Object
+    }
+  },
+
+  computed: {
+    postTitleLinkTo(){
+      return {
+        name: 'postShow',
+        params: {
+          postId: this.item.post.id
+        }
+      }
     }
   }
 })

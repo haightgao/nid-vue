@@ -11,6 +11,7 @@ export interface User {
 export interface UserShowStoreState {
   loading: boolean;
   user: User | null;
+  touchDown: boolean;
 }
 
 export const userShowStoreModule: Module<UserShowStoreState, RootState> = {
@@ -25,6 +26,7 @@ export const userShowStoreModule: Module<UserShowStoreState, RootState> = {
   state: {
     loading: false,
     user: null,
+    touchDown: false,
   } as UserShowStoreState,
 
   /**
@@ -38,6 +40,10 @@ export const userShowStoreModule: Module<UserShowStoreState, RootState> = {
     user(state) {
       return state.user;
     },
+
+    touchDown(state) {
+      return state.touchDown;
+    }
   },
 
   /**
@@ -51,6 +57,10 @@ export const userShowStoreModule: Module<UserShowStoreState, RootState> = {
     setUser(state, data) {
       state.user = data;
     },
+
+    setTouchDown(state, data) {
+      state.touchDown = data;
+    }
   },
 
   /**
