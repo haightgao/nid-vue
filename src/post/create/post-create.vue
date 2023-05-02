@@ -1,5 +1,6 @@
 <template>
   <div class="post-create">
+    <FileCreate @change="onChangeFileCreate" />
     <PostTitleField />
     <PostContentField />
     <PostTagField :postId="postId" v-if="postId" />
@@ -10,7 +11,7 @@
       size="large"
       :useDeleteButton="postId ? true: false"
     />
-    <PostMeta :post="post" v-if="postId && post" />
+    <PostMeta :post="postCache" v-if="postCache" />
   </div>
 </template>
 
@@ -22,12 +23,15 @@ import PostTitleField from '@/post/components/post-title-field.vue';
 import PostContentField from '@/post/components/post-content-field.vue';
 import PostActions from '@/post/components/post-actions.vue';
 import PostMeta from '@/post/components/post-meta.vue';
+import FileCreate from '@/file/create/file-create.vue';
 
 export default defineComponent({
   name: 'PostCreate',
 
   data() {
-    return {};
+    return {
+      postCache: null
+    };
   },
 
   computed: {
@@ -36,6 +40,7 @@ export default defineComponent({
       title: 'post/create/title',
       content: 'post/create/content',
       post: 'post/show/post',
+      selectedFile: 'file/create/selectedFile'
     }),
   },
 
@@ -49,6 +54,11 @@ export default defineComponent({
         this.rest();
       }
     },
+    post(newValue){
+      if(newValue){
+        this.postCache = newValue
+      }
+    }
   },
 
   created() {
@@ -64,7 +74,8 @@ export default defineComponent({
       pushMessage: 'notification/pushMessage',
       getPostById: 'post/show/getPostById',
       updatePost: 'post/edit/updatePost',
-      deletePost: 'post/destroy/deletePost'
+      deletePost: 'post/destroy/deletePost',
+      createFile: 'file/create/createFile'
     }),
 
     ...mapMutations({
@@ -73,6 +84,8 @@ export default defineComponent({
       setTitle: 'post/create/setTitle',
       setContent: 'post/create/setContent',
       setUnsaved: 'post/create/setUnsaved',
+      setSelectedFile: 'file/create/setSelectedFile',
+      setPreviewImage: 'file/create/setPreviewImage'
     }),
 
 
@@ -84,6 +97,7 @@ export default defineComponent({
             title: this.title,
             content: this.content,
           },
+          file: this.selectedFile
         });
 
         await this.$router.push({
@@ -102,14 +116,18 @@ export default defineComponent({
     async getPost(postId) {
       try {
         await this.getPostById(postId);
-        const { title, content, tags } = this.post;
+        const { title, content, tags,file } = this.post;
 
         this.setPostId(postId);
         this.setTitle(title);
         this.setContent(content);
         this.setTags(tags);
+
+        if(file){
+          this.setPreviewImage(file.size.large)
+        }
       } catch (error) {
-        await this.pushMessage({ conent: error.data.message });
+        await this.pushMessage({ content: error.data.message });
       }
     },
 
@@ -117,8 +135,11 @@ export default defineComponent({
       this.setPostId(null);
       this.setTitle('');
       this.setContent('');
-      this.setTags([]);
+      this.setTags(null);
       this.setUnsaved(false)
+      this.setSelectedFile(null)
+      this.setPreviewImage(null)
+      this.postCache = null
     },
 
     async submitUpdatePost() {
@@ -147,10 +168,33 @@ export default defineComponent({
       }catch(error){
         await this.pushMessage({ content: error.data.message });
       }
+    },
+
+    onChangeFileCreate(files){
+      const file = files[0]
+      if(!file) return
+
+      if(!this.title){
+        this.setTitle(file.name.split('.')[0])
+      }
+
+      if(this.postId){
+        this.submitCreateFile()
+      }else{
+        this.submitCreatePost()
+      }
+    },
+
+    async submitCreateFile(){
+      try{
+        await this.createFile({postId: this.postId, file: this.selectedFile})
+      }catch (error){
+        await this.pushMessage({ content: error.data.message });
+      }
     }
   },
 
-  components: { PostMeta, PostActions, PostContentField, PostTitleField, PostTagField },
+  components: { FileCreate, PostMeta, PostActions, PostContentField, PostTitleField, PostTagField },
 });
 </script>
 

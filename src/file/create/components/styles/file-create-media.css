@@ -1,0 +1,16 @@
+.file-create-media {
+  width: 100%;
+}
+.file-create-media > .image {
+  width: 100%;
+  height: 100%;
+}
+
+.file-create-media.loading {
+  padding-top: 66.66%;
+}
+
+.file-create-media.loading > .image {
+  position: absolute;
+  top: 0;
+}
