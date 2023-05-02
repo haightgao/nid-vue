@@ -3,6 +3,7 @@ import {RootState} from '@/app/app.store';
 import {apiHttpClient} from '@/app/app.service';
 
 export interface PostEditStoreState {
+  tags: Array<TagItem>;
   loading: boolean;
 }
 
@@ -16,22 +17,45 @@ export interface UpdatePostOptions {
   data?: UpdatePostData;
 }
 
+export interface TagItem {
+  id?: number;
+  name?: string;
+}
+
+export interface CreatePostTagOptions {
+  postId?: number;
+  data?: TagItem;
+}
+
+export interface DeletePostTagOptions{
+  postId?: number;
+  tagId?: number;
+}
+
 export const postEditStoreModule: Module<PostEditStoreState, RootState> = {
   namespaced: true,
 
   state: {
+    tags: [],
     loading: false
   } as PostEditStoreState,
 
   getters: {
     loading(state) {
       return state.loading;
+    },
+
+    tags(state) {
+      return state.tags;
     }
   },
 
   mutations: {
     setLoading(state, loading) {
       state.loading = loading;
+    },
+    setTags(state, tags) {
+      state.tags = tags;
     }
   },
 
@@ -44,6 +68,44 @@ export const postEditStoreModule: Module<PostEditStoreState, RootState> = {
       try {
         const response = await apiHttpClient.patch(`posts/${postId}`, data);
         commit('setLoading', false);
+        return response;
+      } catch (e) {
+        commit('setLoading', false);
+        throw e.response;
+      }
+    },
+
+    async createPostTag({commit, dispatch}, options: CreatePostTagOptions) {
+      commit('setLoading', true);
+
+      const {postId, data} = options
+
+      try {
+        const response = await apiHttpClient.post(`posts/${postId}/tag`, data);
+
+        const {data: {tags}} = await dispatch('post/show/getPostById', postId, {root: true});
+        commit('setLoading', false);
+        commit('setTags', tags);
+        return response;
+      } catch (e) {
+        commit('setLoading', false);
+        throw e.response;
+      }
+    },
+
+    async deletePostTag({commit, dispatch}, options: DeletePostTagOptions) {
+      commit('setLoading', true);
+
+      const {postId, tagId} = options
+
+      try {
+        const response = await apiHttpClient.delete(`posts/${postId}/tag`, {
+          data: {tagId}
+        });
+
+        const {data: {tags}} = await dispatch('post/show/getPostById', postId, {root: true});
+        commit('setLoading', false);
+        commit('setTags', tags);
         return response;
       } catch (e) {
         commit('setLoading', false);

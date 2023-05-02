@@ -2,6 +2,7 @@
   <div class="post-create">
     <TextField placeholder="标题" v-model="title" />
     <TextareaField placeholder="描述" class="bordered" :rows="1" v-model="content" />
+    <PostTagField :postId="postId" />
     <button class="button large" @click="onClickSubmitButton">
       {{submitButtonText}}
     </button>
@@ -10,9 +11,10 @@
 
 <script>
 import {defineComponent} from 'vue';
-import {mapGetters, mapActions} from 'vuex';
+import {mapGetters, mapActions,mapMutations} from 'vuex';
 import TextField from '@/app/components/text-field.vue';
 import TextareaField from '@/app/components/textarea-field.vue';
+import PostTagField from '@/post/components/post-tag-field.vue';
 
 export default defineComponent({
   name: 'PostCreate',
@@ -45,7 +47,6 @@ export default defineComponent({
 
   created() {
     const {post: postId} = this.$route.query;
-console.log('---')
     if(postId){
       this.getPost(postId)
     }
@@ -57,6 +58,10 @@ console.log('---')
       pushMessage: 'notification/pushMessage',
       getPostById: 'post/show/getPostById',
       updatePost: 'post/edit/updatePost'
+    }),
+
+    ...mapMutations({
+      setTags: 'post/edit/setTags'
     }),
 
     onClickSubmitButton(){
@@ -93,11 +98,12 @@ console.log('---')
       try{
         const response = await this.getPostById(postId)
         console.log('response:', response)
-        const {title, content} = response.data
+        const {title, content, tags} = response.data
 
         this.postId = postId
         this.title = title
         this.content = content
+        this.setTags(tags)
       }catch (error){
         await this.pushMessage({ conent: error.data.message })
       }
@@ -124,7 +130,7 @@ console.log('---')
     }
   },
 
-  components: { TextareaField, TextField },
+  components: { PostTagField, TextareaField, TextField },
 })
 </script>
 
