@@ -1,6 +1,6 @@
 <template>
   <div class="reply-list">
-    <ReplyListItem v-for="reply in list" :key="reply.id" :item="reply" />
+    <ReplyListItem v-for="reply in list" :key="reply.id" :item="reply" :comment="comment" />
   </div>
 </template>
 
@@ -15,6 +15,9 @@ export default defineComponent({
   props: {
     list: {
       type: Array
+    },
+    comment: {
+      type: Object
     }
   }
 })

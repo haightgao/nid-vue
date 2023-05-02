@@ -16,7 +16,10 @@
         :showOperation="showOperation"
         @editing="onEditingComment"
         :isEditing="isEditing"
+        @replying="onReplyingComment"
+        :isReplying="isReplying"
       />
+      <ReplyCreate v-if="isReplying" :comment="item" :showReplies="showReplies"/>
       <ReplyIndex :comment="item" v-if="showReplies" />
     </div>
   </div>
@@ -30,6 +33,7 @@ import CommentListItemContent from '@/comment/index/components/comment-list-item
 import CommentListItemActions from '@/comment/index/components/comment-list-item.actions.vue';
 import ReplyIndex from '@/reply/index/reply-index.vue';
 import CommentEdit from '@/comment/edit/comment-edit.vue';
+import ReplyCreate from '@/reply/create/reply-create.vue';
 
 export default defineComponent({
   name: 'CommentListItem',
@@ -45,6 +49,7 @@ export default defineComponent({
       showReplies: false,
       showOperation: false,
       isEditing: false,
+      isReplying: false,
       comment: this.item
     }
   },
@@ -65,10 +70,14 @@ export default defineComponent({
     onUpdatedComment(data){
       this.comment.content = data
       this.isEditing = false
+    },
+
+    onReplyingComment(){
+      this.isReplying = !this.isReplying
     }
   },
 
-  components: { CommentEdit, ReplyIndex, CommentListItemActions, CommentListItemContent, CommentListItemMeta, UserAvatar },
+  components: { ReplyCreate, CommentEdit, ReplyIndex, CommentListItemActions, CommentListItemContent, CommentListItemMeta, UserAvatar },
 });
 </script>
 
