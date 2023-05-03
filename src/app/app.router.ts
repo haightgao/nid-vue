@@ -3,6 +3,7 @@ import appRoutes from './app.routes';
 import postRoutes from '@/post/post.routes';
 import authRoutes from '@/auth/auth.routes';
 import userRouters from '@/user/user.routes';
+import manageRoutes from '@/manage/manage.routes'
 import { appToolbarItemGuard } from './app.router.guard';
 
 /**
@@ -10,7 +11,7 @@ import { appToolbarItemGuard } from './app.router.guard';
  */
 const router = createRouter({
   history: createWebHistory(),
-  routes: [...appRoutes, ...postRoutes, ...authRoutes, ...userRouters],
+  routes: [...appRoutes, ...postRoutes, ...authRoutes, ...userRouters, ...manageRoutes],
 });
 
 router.beforeEach(appToolbarItemGuard);

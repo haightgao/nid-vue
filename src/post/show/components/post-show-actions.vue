@@ -7,7 +7,7 @@
           <AppIcon name="comment" />
         </button>
       </div>
-      <div class="text">
+      <div class="text" v-if="post.totalComments">
         {{post.totalComments}}
       </div>
     </div>

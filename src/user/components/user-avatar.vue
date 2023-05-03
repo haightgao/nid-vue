@@ -80,7 +80,6 @@ export default defineComponent({
 
     userAvatarLinkTo() {
       let linkTo;
-
       if (this.link === 'login' && !this.isLoggedIn) {
         linkTo = { name: 'login' };
       } else if (this.user) {

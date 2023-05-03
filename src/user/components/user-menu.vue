@@ -71,6 +71,12 @@ export default defineComponent({
             params: {userId: this.currentUser.id}
           },
           text: '帐户'
+        },{
+          linkTo: {
+            name: 'managePost',
+            params: {userId: this.currentUser.id}
+          },
+          text: '管理'
         }]
       ]
     }
