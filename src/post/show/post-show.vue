@@ -69,7 +69,8 @@ export default defineComponent({
       post: 'post/show/post',
       layout: 'post/show/layout',
       sideSheetComponent: 'layout/sideSheetComponent',
-      posts: 'post/index/posts'
+      posts: 'post/index/posts',
+      isSideSheetActive: 'layout/isSideSheetActive'
     }),
 
     showPost() {
@@ -77,7 +78,7 @@ export default defineComponent({
     },
 
     postShowClasses(){
-      return ['post-show', this.layout, {aside: this.sideSheetComponent}]
+      return ['post-show', this.layout, {aside: this.isSideSheetActive}]
     }
   },
 
@@ -92,6 +93,8 @@ export default defineComponent({
       this.setLayout(`${this.layout ? '': 'flow'}`)
     },
     onKeyUpWindow(event){
+      if(event.ctrlKey || event.metaKey) return
+
       switch (event.key){
         case 'b':
           if(this.posts.length){

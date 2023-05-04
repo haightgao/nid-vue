@@ -4,6 +4,7 @@ import { RootState } from '@/app/app.store';
 export interface AppToolbarStoreState {
   showPostListLayoutSwitcher: boolean;
   showPostShowNavigator: boolean;
+  showSideSheetItem: boolean;
 }
 
 export const appToolbarStoreModule: Module<AppToolbarStoreState, RootState> = {
@@ -18,6 +19,7 @@ export const appToolbarStoreModule: Module<AppToolbarStoreState, RootState> = {
   state: {
     showPostListLayoutSwitcher: false,
     showPostShowNavigator: false,
+    showSideSheetItem: false,
   } as AppToolbarStoreState,
 
   /**
@@ -30,6 +32,10 @@ export const appToolbarStoreModule: Module<AppToolbarStoreState, RootState> = {
 
     showPostShowNavigator(state,_, rootState) {
       return state.showPostShowNavigator && rootState.post.index.posts.length;
+    },
+
+    showSideSheetItem(state) {
+      return state.showSideSheetItem;
     }
   },
 
@@ -43,6 +49,10 @@ export const appToolbarStoreModule: Module<AppToolbarStoreState, RootState> = {
 
     setShowPostShowNavigator(state, data) {
       state.showPostShowNavigator = data;
+    },
+
+    setShowSideSheetItem(state, data) {
+      state.showSideSheetItem = data;
     }
   },
 

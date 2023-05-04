@@ -1,6 +1,6 @@
 <template>
   <div class="manage-post-list-item-media">
-    <img class="image" :src="item.file.size.thumbnail" alt="" />
+    <img class="image" :src="item.file.size.medium" alt="" />
   </div>
 </template>
 

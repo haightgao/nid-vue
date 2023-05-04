@@ -4,8 +4,10 @@ import { RootState } from '@/app/app.store';
 export interface LayoutStoreState {
   theme: string;
   sideSheetComponent: string;
+  // eslint-disable-next-line
   sideSheetProps: any;
   sideSheetTouchdown: boolean;
+  isSideSheetActive: boolean;
 }
 
 export const LayoutStoreModule: Module<LayoutStoreState, RootState> = {
@@ -22,6 +24,7 @@ export const LayoutStoreModule: Module<LayoutStoreState, RootState> = {
     sideSheetComponent: '',
     sideSheetProps: null,
     sideSheetTouchdown: false,
+    isSideSheetActive: false,
   } as LayoutStoreState,
 
   /**
@@ -42,6 +45,10 @@ export const LayoutStoreModule: Module<LayoutStoreState, RootState> = {
 
     sideSheetTouchdown(state) {
       return state.sideSheetTouchdown;
+    },
+
+    isSideSheetActive(state) {
+      return state.isSideSheetActive;
     }
   },
 
@@ -68,11 +75,27 @@ export const LayoutStoreModule: Module<LayoutStoreState, RootState> = {
 
     setSideSheetTouchdown(state, data) {
       state.sideSheetTouchdown = data;
+    },
+
+    setIsSideSheetActive(state, data) {
+      state.isSideSheetActive = data;
     }
   },
 
   /**
    * 动作
    */
-  actions: {},
+  actions: {
+    switchSideSheet({commit, state}){
+      commit('setIsSideSheetActive', !state.isSideSheetActive)
+    },
+
+    closeSideSheet({commit}){
+      commit('setIsSideSheetActive', false)
+    },
+
+    openSideSheet({commit}){
+      commit('setIsSideSheetActive', true)
+    }
+  },
 };
