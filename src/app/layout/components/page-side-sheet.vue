@@ -11,6 +11,7 @@
 import {defineComponent} from 'vue';
 import {mapGetters,mapMutations,mapActions} from 'vuex';
 import CommentSideSheet from '@/comment/components/comment-side-sheet.vue';
+import ManagePostSideSheet from '@/manage/post/components/manage-post-side-sheet.vue';
 import CloseButton from '@/app/components/close-button.vue';
 
 export default defineComponent({
@@ -54,7 +55,7 @@ export default defineComponent({
     }
   },
 
-  components: { CloseButton, CommentSideSheet}
+  components: { CloseButton, CommentSideSheet, ManagePostSideSheet}
 })
 </script>
 

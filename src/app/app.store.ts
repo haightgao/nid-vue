@@ -1,8 +1,8 @@
 import { createStore } from 'vuex';
-import { AuthStoreModule, AuthStoreState } from '../auth/auth.store';
-import { postStoreModule, PostStoreState } from '../post/post.store';
-import { UserShowStoreState } from '../user/show/user-show.store';
-import { userStoreModule } from '../user/user.store';
+import { AuthStoreModule, AuthStoreState } from '@/auth/auth.store';
+import { postStoreModule, PostStoreState } from '@/post/post.store';
+import { UserShowStoreState } from '@/user/show/user-show.store';
+import { userStoreModule } from '@/user/user.store';
 import { localStoragePlugin } from './app.store.plugin';
 import { LayoutStoreModule, LayoutStoreState } from './layout/layout.store';
 import {
@@ -17,6 +17,7 @@ import { fileStoreModule, FileStoreState } from '@/file/file.store';
 import { commentStoreModule, CommentStoreState } from '@/comment/comment.store';
 import { replyStoreModule, ReplyStoreState } from '@/reply/reply.store';
 import { likeStoreModule, LikeStoreState } from '@/like/like.store';
+import { manageStoreModule, ManageStoreState } from '@/manage/manage.store';
 
 export interface RootState {
   appName: string;
@@ -30,6 +31,7 @@ export interface RootState {
   comment: CommentStoreState;
   reply: ReplyStoreState;
   like: LikeStoreState;
+  manage: ManageStoreState;
 }
 
 /**
@@ -51,6 +53,7 @@ const store = createStore({
     comment: commentStoreModule,
     reply: replyStoreModule,
     like: likeStoreModule,
+    manage: manageStoreModule,
   },
 
   plugins: [localStoragePlugin],
