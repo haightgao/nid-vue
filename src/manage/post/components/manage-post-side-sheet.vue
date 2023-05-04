@@ -1,14 +1,16 @@
 <template>
   <div class="manage-post-side-sheet">
-    ManagePostSideSheet
+    <ManagePostEdit />
   </div>
 </template>
 
 <script>
 import {defineComponent} from 'vue';
+import ManagePostEdit from '@/manage/post/edit/manage-post-edit.vue';
 
 export default defineComponent({
-  name: 'ManagePostSideSheet'
+  name: 'ManagePostSideSheet',
+  components: { ManagePostEdit },
 })
 </script>
 

@@ -1,6 +1,7 @@
 import { Module } from 'vuex';
 import { RootState } from '@/app/app.store';
 import { PostListItem } from '@/post/index/post-index.store';
+import { TagItem } from '@/post/edit/post-edit.store';
 
 export interface ManageSelectStoreState {
   selectedPosts: Array<PostListItem>;
@@ -37,6 +38,19 @@ export const manageSelectStoreModule: Module<
     hasSelected(state) {
       return state.selectItems.length > 0;
     },
+    currentEditedPost(state) {
+      return state.selectedPosts[state.selectedPosts.length - 1];
+    },
+    selectedPostTags(state) {
+      const tags = state.selectedPosts.reduce((accumulator, post) => {
+        return post.tags ? [...accumulator, ...post.tags] : accumulator;
+      }, [] as Array<TagItem>);
+
+      // 去重
+      return Array.from(new Set(tags.map(tag => tag.id))).map(tagId =>
+        tags.find(tag => tag.id === tagId),
+      );
+    },
   },
 
   mutations: {
@@ -50,45 +64,80 @@ export const manageSelectStoreModule: Module<
   },
 
   actions: {
-    getSelectedPosts({ state, commit, rootGetters }) {
+    getSelectedPosts({ state, commit, rootGetters, getters }) {
       const selectedPosts = state.selectItems.map(item =>
         rootGetters['post/index/posts'].find(
           (post: PostListItem) => post.id === item,
         ),
       );
 
-      commit('setSelectedPosts', selectedPosts)
+      commit('setSelectedPosts', selectedPosts);
 
-      return selectedPosts
+      commit('post/edit/setTags', getters.selectedPostTags, { root: true });
+
+      return selectedPosts;
     },
 
-    manageSelectItems({commit, state, dispatch}, options: ManageSelectItemsOptions){
-      const {resourceType, item, actionType} = options
+    manageSelectItems(
+      { commit, state, dispatch },
+      options: ManageSelectItemsOptions,
+    ) {
+      const { resourceType, item, actionType } = options;
 
-      let items: Array<number>
+      let items: Array<number>;
 
-      switch (actionType){
+      switch (actionType) {
         case 'add':
-          items = [...state.selectItems, item]
-          break
+          items = [...state.selectItems, item];
+          break;
         case 'remove':
-          items = state.selectItems.filter(id => id !== item)
-          break
+          items = state.selectItems.filter(id => id !== item);
+          break;
         case 'reset':
-          items = []
-          break
+          items = [];
+          break;
         default:
-          items = [item]
-          break
+          items = [item];
+          break;
       }
 
-      commit('setSelectItems', items)
+      commit('setSelectItems', items);
 
-      switch (resourceType){
+      switch (resourceType) {
         case 'post':
-          dispatch('getSelectedPosts')
-          break
+          dispatch('getSelectedPosts');
+          break;
       }
-    }
+    },
+
+    async deleteSelectPosts({ commit, dispatch, getters }) {
+      const posts = getters.selectedPosts as Array<PostListItem>;
+
+      if (!posts.length) return;
+
+      for (const post of posts) {
+        try {
+          await dispatch(
+            'post/destroy/deletePost',
+            { postId: post.id },
+            { root: true },
+          );
+
+          await dispatch('manageSelectItems', {
+            resourceType: 'post',
+            actionType: 'remove',
+            item: post.id,
+          });
+
+          commit('post/index/removePostItem', post, { root: true });
+        } catch (error) {
+          dispatch(
+            'notification/pushMessage',
+            { content: error.data.message },
+            { root: true },
+          );
+        }
+      }
+    },
   },
 };

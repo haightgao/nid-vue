@@ -1,13 +1,13 @@
-import {Module} from 'vuex';
-import {RootState} from '@/app/app.store';
-import {apiHttpClient} from '@/app/app.service';
+import { Module } from 'vuex';
+import { RootState } from '@/app/app.store';
+import { apiHttpClient } from '@/app/app.service';
 
 export interface PostEditStoreState {
   tags: Array<TagItem>;
   loading: boolean;
 }
 
-export interface UpdatePostData{
+export interface UpdatePostData {
   title?: string;
   content?: string;
 }
@@ -27,7 +27,7 @@ export interface CreatePostTagOptions {
   data?: TagItem;
 }
 
-export interface DeletePostTagOptions{
+export interface DeletePostTagOptions {
   postId?: number;
   tagId?: number;
 }
@@ -37,7 +37,7 @@ export const postEditStoreModule: Module<PostEditStoreState, RootState> = {
 
   state: {
     tags: [],
-    loading: false
+    loading: false,
   } as PostEditStoreState,
 
   getters: {
@@ -47,7 +47,10 @@ export const postEditStoreModule: Module<PostEditStoreState, RootState> = {
 
     tags(state) {
       return state.tags;
-    }
+    },
+    hasTag(state) {
+      return state.tags && state.tags.length;
+    },
   },
 
   mutations: {
@@ -56,14 +59,14 @@ export const postEditStoreModule: Module<PostEditStoreState, RootState> = {
     },
     setTags(state, tags) {
       state.tags = tags;
-    }
+    },
   },
 
   actions: {
-    async updatePost({commit}, options: UpdatePostOptions) {
+    async updatePost({ commit }, options: UpdatePostOptions) {
       commit('setLoading', true);
 
-      const {postId, data} = options
+      const { postId, data } = options;
 
       try {
         const response = await apiHttpClient.patch(`posts/${postId}`, data);
@@ -75,17 +78,22 @@ export const postEditStoreModule: Module<PostEditStoreState, RootState> = {
       }
     },
 
-    async createPostTag({commit, dispatch}, options: CreatePostTagOptions) {
+    async createPostTag({ commit, dispatch }, options: CreatePostTagOptions) {
       commit('setLoading', true);
 
-      const {postId, data} = options
+      const { postId, data } = options;
 
       try {
         const response = await apiHttpClient.post(`posts/${postId}/tag`, data);
 
-        const {data: {tags}} = await dispatch('post/show/getPostById', postId, {root: true});
+        const { data: post } = await dispatch('post/show/getPostById', postId, {
+          root: true,
+        });
+
         commit('setLoading', false);
-        commit('setTags', tags);
+        commit('setTags', post.tags);
+        commit('post/index/setPostItem', post, { root: true });
+
         return response;
       } catch (e) {
         commit('setLoading', false);
@@ -93,24 +101,28 @@ export const postEditStoreModule: Module<PostEditStoreState, RootState> = {
       }
     },
 
-    async deletePostTag({commit, dispatch}, options: DeletePostTagOptions) {
+    async deletePostTag({ commit, dispatch }, options: DeletePostTagOptions) {
       commit('setLoading', true);
 
-      const {postId, tagId} = options
+      const { postId, tagId } = options;
 
       try {
         const response = await apiHttpClient.delete(`posts/${postId}/tag`, {
-          data: {tagId}
+          data: { tagId },
         });
 
-        const {data: {tags}} = await dispatch('post/show/getPostById', postId, {root: true});
+        const { data: post } = await dispatch('post/show/getPostById', postId, {
+          root: true,
+        });
         commit('setLoading', false);
-        commit('setTags', tags);
+        commit('setTags', post.tags);
+        commit('post/index/setPostItem', post, { root: true });
+
         return response;
       } catch (e) {
         commit('setLoading', false);
         throw e.response;
       }
-    }
-  }
-}
+    },
+  },
+};

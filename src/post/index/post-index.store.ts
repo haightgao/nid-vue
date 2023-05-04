@@ -170,6 +170,22 @@ export const postIndexStoreModule: Module<PostIndexStoreState, RootState> = {
         }
         return post
       })
+    },
+
+    setPostItem(state, data){
+      const {id: postId}=data
+      state.posts = state.posts.map(post => {
+        if(post.id === postId){
+          post = {...post, ...data}
+        }
+        return post
+      })
+    },
+
+    removePostItem(state, data){
+      const {id: postId} = data
+
+      state.posts = state.posts.filter(post => post.id !== postId)
     }
   },
 
