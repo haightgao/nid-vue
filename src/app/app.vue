@@ -7,7 +7,7 @@
 <script>
 import { mapMutations, mapActions } from 'vuex';
 import AppLayout from '@/app/layout/app-layout.vue';
-import { getStorage } from './app.service';
+import { getStorage, socket, apiHttpClient } from './app.service';
 
 export default {
   data() {
@@ -29,6 +29,10 @@ export default {
     if (userId) {
       this.getCurrentUser(userId);
     }
+
+    socket.on('connect', () => {
+      apiHttpClient.defaults.headers.common['X-Socket-Id'] = socket.id;
+    });
   },
 
   methods: {

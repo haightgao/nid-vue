@@ -141,52 +141,72 @@ export const postIndexStoreModule: Module<PostIndexStoreState, RootState> = {
       state.filter = data;
     },
 
-    setPostItemLiked(state, data){
-      const {postId, liked} = data
+    setPostItemLiked(state, data) {
+      const { postId, liked } = data;
 
       state.posts = state.posts.map(post => {
-        if(post.id === postId){
-          post.liked = liked
+        if (post.id === postId) {
+          post.liked = liked;
         }
-        return post
-      })
+        return post;
+      });
     },
 
-    setPostItemTotalLikes(state, data){
-      const {postId, actionType} = data
+    setPostItemTotalLikes(state, data) {
+      const { postId, actionType } = data;
 
       state.posts = state.posts.map(post => {
-        if(post.id === postId){
-          switch (actionType){
+        if (post.id === postId) {
+          switch (actionType) {
             case 'increase':
-              post.totalLikes++
-              break
+              post.totalLikes++;
+              break;
             case 'decrease':
-              post.totalLikes--
-              break
+              post.totalLikes--;
+              break;
             default:
-              break
+              break;
           }
         }
-        return post
-      })
+        return post;
+      });
     },
 
-    setPostItem(state, data){
-      const {id: postId}=data
+    setPostItem(state, data) {
+      const { id: postId } = data;
       state.posts = state.posts.map(post => {
-        if(post.id === postId){
-          post = {...post, ...data}
+        if (post.id === postId) {
+          post = { ...post, ...data };
         }
-        return post
-      })
+        return post;
+      });
     },
 
-    removePostItem(state, data){
-      const {id: postId} = data
+    removePostItem(state, data) {
+      const { id: postId } = data;
 
-      state.posts = state.posts.filter(post => post.id !== postId)
-    }
+      state.posts = state.posts.filter(post => post.id !== postId);
+    },
+
+    setPostItemTotalComments(state, data) {
+      const { postId, actionType } = data;
+
+      state.posts = state.posts.map(post => {
+        if (post.id === postId) {
+          switch (actionType) {
+            case 'increase':
+              post.totalComments++;
+              break;
+            case 'decrease':
+              post.totalComments--;
+              break;
+            default:
+              break;
+          }
+        }
+        return post;
+      });
+    },
   },
 
   actions: {

@@ -3,7 +3,7 @@ import { apiHttpClient } from '@/app/app.service';
 import { RootState } from '@/app/app.store';
 import { User } from '@/user/show/user-show.store';
 import { postFileProcess } from '@/post/post.service';
-import appRouter from '@/app/app.router'
+import appRouter from '@/app/app.router';
 
 export interface Post {
   id: number;
@@ -53,36 +53,48 @@ export const postShowStoreModule: Module<PostShowStoreState, RootState> = {
     },
 
     post(state) {
-      return Object.keys(state.post).length ? postFileProcess(state.post) : null;
+      return Object.keys(state.post).length
+        ? postFileProcess(state.post)
+        : null;
     },
 
     layout(state) {
-      return state.layout
+      return state.layout;
     },
 
     currentPostIndex(state, _, rootState) {
-      return rootState.post.index.posts.findIndex(item => item.id === state.post.id)
+      return rootState.post.index.posts.findIndex(
+        item => item.id === state.post.id,
+      );
     },
 
     prevPost(_, getters, rootState) {
-      return rootState.post.index.posts[getters.currentPostIndex - 1]
+      return rootState.post.index.posts[getters.currentPostIndex - 1];
     },
 
     nextPost(_, getters, rootState) {
-      return rootState.post.index.posts[getters.currentPostIndex + 1]
+      return rootState.post.index.posts[getters.currentPostIndex + 1];
     },
 
     canNavigateBack(_, getters, rootState) {
-      return rootState.post.index.posts.length > 0 && getters.currentPostIndex > 0
+      return (
+        rootState.post.index.posts.length > 0 && getters.currentPostIndex > 0
+      );
     },
 
     canNavigateForward(_, getters, rootState) {
-      return rootState.post.index.posts.length > 0 && rootState.post.index.posts.length !== getters.currentPostIndex + 1
+      return (
+        rootState.post.index.posts.length > 0 &&
+        rootState.post.index.posts.length !== getters.currentPostIndex + 1
+      );
     },
 
     canGetMorePosts(_, getters, rootState, rootGetters) {
-      return rootGetters['post/index/hasMore'] && rootState.post.index.posts.length - getters.currentPostIndex < 3
-    }
+      return (
+        rootGetters['post/index/hasMore'] &&
+        rootState.post.index.posts.length - getters.currentPostIndex < 3
+      );
+    },
   },
 
   mutations: {
@@ -98,30 +110,47 @@ export const postShowStoreModule: Module<PostShowStoreState, RootState> = {
       state.layout = data;
     },
 
-    setPostLiked(state, data){
-      const {postId, liked} = data
+    setPostLiked(state, data) {
+      const { postId, liked } = data;
 
-      if(state.post.id === postId){
-        state.post.liked = liked
+      if (state.post.id === postId) {
+        state.post.liked = liked;
       }
     },
 
-    setPostTotalLikes(state, data){
-      const {postId, actionType} = data
+    setPostTotalLikes(state, data) {
+      const { postId, actionType } = data;
 
-      if(state.post.id === postId){
-        switch (actionType){
+      if (state.post.id === postId) {
+        switch (actionType) {
           case 'increment':
-            state.post.totalLikes++
-            break
+            state.post.totalLikes++;
+            break;
           case 'decrement':
-            state.post.totalLikes--
-            break
+            state.post.totalLikes--;
+            break;
           default:
-            break
+            break;
         }
       }
-    }
+    },
+
+    setPostTotalComments(state, data) {
+      const { postId, actionType } = data;
+
+      if (state.post.id === postId) {
+        switch (actionType) {
+          case 'increment':
+            state.post.totalComments++;
+            break;
+          case 'decrement':
+            state.post.totalComments--;
+            break;
+          default:
+            break;
+        }
+      }
+    },
   },
 
   actions: {
@@ -141,9 +170,9 @@ export const postShowStoreModule: Module<PostShowStoreState, RootState> = {
       }
     },
 
-    async goGetPrevPost({getters, dispatch}){
-      if(!getters.canNavigateBack){
-        return
+    async goGetPrevPost({ getters, dispatch }) {
+      if (!getters.canNavigateBack) {
+        return;
       }
 
       try {
@@ -152,22 +181,22 @@ export const postShowStoreModule: Module<PostShowStoreState, RootState> = {
 
         await appRouter.replace({
           name: 'postShow',
-          params: { postId: prevPostId }
-        })
+          params: { postId: prevPostId },
+        });
 
-        return response
-      }catch (error){
+        return response;
+      } catch (error) {
         throw error.response;
       }
     },
 
-    async goGetNextPost({getters, dispatch}){
-      if(!getters.canNavigateForward){
-        return
+    async goGetNextPost({ getters, dispatch }) {
+      if (!getters.canNavigateForward) {
+        return;
       }
 
-      if(getters.canGetMorePosts){
-        dispatch('post/index/getPosts', {}, {root: true})
+      if (getters.canGetMorePosts) {
+        dispatch('post/index/getPosts', {}, { root: true });
       }
 
       try {
@@ -176,13 +205,13 @@ export const postShowStoreModule: Module<PostShowStoreState, RootState> = {
 
         await appRouter.replace({
           name: 'postShow',
-          params: { postId: nextPostId}
-        })
+          params: { postId: nextPostId },
+        });
 
-        return response
-      }catch (error){
+        return response;
+      } catch (error) {
         throw error.response;
       }
-    }
+    },
   },
 };

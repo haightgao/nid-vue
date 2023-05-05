@@ -6,7 +6,7 @@
       <PostShowFileMeta :post="post" />
       <PostShowActions :post="post" />
     </div>
-    <PostShowHeader :post="post" @click="onClickPostHeader"/>
+    <PostShowHeader :post="post" @click="onClickPostHeader" />
     <PostShowContent :post="post" />
     <PostShowTags v-if="post.tags" :tags="post.tags" />
     <PostShowEdit :post="post" v-if="showPostEdit" />
@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import { mapGetters, mapActions,mapMutations } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 import { defineComponent } from 'vue';
-import { getStorage } from '@/app/app.service';
+import { getStorage, socket } from '@/app/app.service';
 import PostShowMedia from '@/post/show/components/post-show-media.vue';
 import PostShowHeader from '@/post/show/components/post-show-header.vue';
 import PostShowContent from '@/post/show/components/post-show-content.vue';
@@ -37,10 +37,10 @@ export default defineComponent({
     postId: String,
   },
 
-  data(){
+  data() {
     return {
-      showPostEdit: false
-    }
+      showPostEdit: false,
+    };
   },
 
   created() {
@@ -48,19 +48,29 @@ export default defineComponent({
 
     // 布局
     const layout = getStorage('post-show-layout');
-    if(layout){
+    if (layout) {
       this.setLayout(layout);
     }
 
-    if(window){
-      window.addEventListener('keyup', this.onKeyUpWindow)
+    if (window) {
+      window.addEventListener('keyup', this.onKeyUpWindow);
     }
+
+    socket.on('userLikePostCreated', this.onUserLikePostCreated);
+    socket.on('userLikePostDeleted', this.onUserLikePostDeleted);
+    socket.off('commentCreated', this.onCommentCreated);
+    socket.off('commentDeleted', this.onCommentCreated);
   },
 
   unmounted() {
-    if(window){
-      window.removeEventListener('keyup', this.onKeyUpWindow)
+    if (window) {
+      window.removeEventListener('keyup', this.onKeyUpWindow);
     }
+
+    socket.off('userLikePostCreated', this.onUserLikePostCreated);
+    socket.off('userLikePostDeleted', this.onUserLikePostDeleted);
+    socket.off('commentCreated', this.onCommentCreated);
+    socket.off('commentDeleted', this.onCommentCreated);
   },
 
   computed: {
@@ -70,16 +80,16 @@ export default defineComponent({
       layout: 'post/show/layout',
       sideSheetComponent: 'layout/sideSheetComponent',
       posts: 'post/index/posts',
-      isSideSheetActive: 'layout/isSideSheetActive'
+      isSideSheetActive: 'layout/isSideSheetActive',
     }),
 
     showPost() {
       return !this.loading && this.post;
     },
 
-    postShowClasses(){
-      return ['post-show', this.layout, {aside: this.isSideSheetActive}]
-    }
+    postShowClasses() {
+      return ['post-show', this.layout, { aside: this.isSideSheetActive }];
+    },
   },
 
   methods: {
@@ -88,33 +98,80 @@ export default defineComponent({
     }),
     ...mapMutations({
       setLayout: 'post/show/setLayout',
+      setPostTotalLikes: 'post/show/setPostTotalLikes',
+      setPostTotalComments: 'post/show/setPostTotalComments',
     }),
-    onClickPostShowMedia(){
-      this.setLayout(`${this.layout ? '': 'flow'}`)
+    onClickPostShowMedia() {
+      this.setLayout(`${this.layout ? '' : 'flow'}`);
     },
-    onKeyUpWindow(event){
-      if(event.ctrlKey || event.metaKey) return
+    onKeyUpWindow(event) {
+      if (event.ctrlKey || event.metaKey) return;
 
-      switch (event.key){
+      switch (event.key) {
         case 'b':
-          if(this.posts.length){
-            this.$router.back()
+          if (this.posts.length) {
+            this.$router.back();
           }
-          break
+          break;
         default:
-          break
+          break;
       }
     },
 
-    onClickPostHeader(){
-      this.showPostEdit = !this.showPostEdit
-    }
+    onClickPostHeader() {
+      this.showPostEdit = !this.showPostEdit;
+    },
+
+    onUserLikePostCreated({ postId, socketId }) {
+      if (socket.id === socketId) return;
+
+      this.setPostTotalLikes({
+        postId,
+        actionType: 'increase',
+      });
+    },
+
+    onUserLikePostDeleted({ postId, socketId }) {
+      if (socket.id === socketId) return;
+
+      this.setPostTotalLikes({
+        postId,
+        actionType: 'decrease',
+      });
+    },
+
+    onCommentCreated({ postId, socketId }) {
+      if (socket.id === socketId) return;
+
+      this.setPostTotalComments({
+        postId,
+        actionType: 'increase',
+      });
+    },
+
+    onCommentDeleted({ postId, socketId }) {
+      if (socket.id === socketId) return;
+
+      this.setPostTotalComments({
+        postId,
+        actionType: 'decrease',
+      });
+    },
   },
 
-  components: { PostShowEdit, PostShowSkeleton, PostShowContent, PostShowMedia,PostShowHeader,PostShowActions,PostShowFileMeta,PostShowTags}
+  components: {
+    PostShowEdit,
+    PostShowSkeleton,
+    PostShowContent,
+    PostShowMedia,
+    PostShowHeader,
+    PostShowActions,
+    PostShowFileMeta,
+    PostShowTags,
+  },
 });
 </script>
 
 <style scoped>
-@import "./styles/post-show.css";
+@import './styles/post-show.css';
 </style>
