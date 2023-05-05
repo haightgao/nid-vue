@@ -9,7 +9,7 @@
       @create="submitCreatePost"
       @delete="onDeletePost"
       size="large"
-      :useDeleteButton="postId ? true: false"
+      :useDeleteButton="postId"
     />
     <PostMeta :post="postCache" v-if="postCache" />
   </div>
@@ -30,7 +30,7 @@ export default defineComponent({
 
   data() {
     return {
-      postCache: null
+      postCache: null,
     };
   },
 
@@ -40,7 +40,8 @@ export default defineComponent({
       title: 'post/create/title',
       content: 'post/create/content',
       post: 'post/show/post',
-      selectedFile: 'file/create/selectedFile'
+      selectedFile: 'file/create/selectedFile',
+      isLoggedIn: 'auth/isLoggedIn',
     }),
   },
 
@@ -54,11 +55,11 @@ export default defineComponent({
         this.rest();
       }
     },
-    post(newValue){
-      if(newValue){
-        this.postCache = newValue
+    post(newValue) {
+      if (newValue) {
+        this.postCache = newValue;
       }
-    }
+    },
   },
 
   created() {
@@ -75,7 +76,7 @@ export default defineComponent({
       getPostById: 'post/show/getPostById',
       updatePost: 'post/edit/updatePost',
       deletePost: 'post/destroy/deletePost',
-      createFile: 'file/create/createFile'
+      createFile: 'file/create/createFile',
     }),
 
     ...mapMutations({
@@ -85,27 +86,31 @@ export default defineComponent({
       setContent: 'post/create/setContent',
       setUnsaved: 'post/create/setUnsaved',
       setSelectedFile: 'file/create/setSelectedFile',
-      setPreviewImage: 'file/create/setPreviewImage'
+      setPreviewImage: 'file/create/setPreviewImage',
     }),
 
-
-
     async submitCreatePost() {
+      if (!this.isLoggedIn) {
+        await this.pushMessage({
+          content: '请先登录',
+        });
+        return;
+      }
       try {
         await this.createPost({
           data: {
             title: this.title,
             content: this.content,
           },
-          file: this.selectedFile
+          file: this.selectedFile,
         });
 
         await this.$router.push({
           name: 'postCreate',
           query: { post: this.postId },
         });
-        this.setUnsaved(false)
-        await this.getPost(this.postId)
+        this.setUnsaved(false);
+        await this.getPost(this.postId);
       } catch (error) {
         await this.pushMessage({
           content: error.data.message,
@@ -116,15 +121,15 @@ export default defineComponent({
     async getPost(postId) {
       try {
         await this.getPostById(postId);
-        const { title, content, tags,file } = this.post;
+        const { title, content, tags, file } = this.post;
 
         this.setPostId(postId);
         this.setTitle(title);
         this.setContent(content);
         this.setTags(tags);
 
-        if(file){
-          this.setPreviewImage(file.size.large)
+        if (file) {
+          this.setPreviewImage(file.size.large);
         }
       } catch (error) {
         await this.pushMessage({ content: error.data.message });
@@ -136,10 +141,10 @@ export default defineComponent({
       this.setTitle('');
       this.setContent('');
       this.setTags(null);
-      this.setUnsaved(false)
-      this.setSelectedFile(null)
-      this.setPreviewImage(null)
-      this.postCache = null
+      this.setUnsaved(false);
+      this.setSelectedFile(null);
+      this.setPreviewImage(null);
+      this.postCache = null;
     },
 
     async submitUpdatePost() {
@@ -151,53 +156,66 @@ export default defineComponent({
             content: this.content,
           },
         });
-        this.setUnsaved(false)
-        await this.getPost(this.postId)
+        this.setUnsaved(false);
+        await this.getPost(this.postId);
       } catch (error) {
         await this.pushMessage({ content: error.data.message });
       }
     },
 
-    async onDeletePost(){
-      try{
-        await this.deletePost({postId: this.postId})
+    async onDeletePost() {
+      try {
+        await this.deletePost({ postId: this.postId });
 
         this.$router.push({
-          name: 'postCreate'
-        })
-      }catch(error){
+          name: 'postCreate',
+        });
+      } catch (error) {
         await this.pushMessage({ content: error.data.message });
       }
     },
 
-    onChangeFileCreate(files){
-      const file = files[0]
-      if(!file) return
+    onChangeFileCreate(files) {
+      const file = files[0];
+      if (!file) return;
 
-      if(!this.title){
-        this.setTitle(file.name.split('.')[0])
+      if (!this.title) {
+        this.setTitle(file.name.split('.')[0]);
       }
 
-      if(this.postId){
-        this.submitCreateFile()
-      }else{
-        this.submitCreatePost()
+      if (this.postId) {
+        this.submitCreateFile();
+      } else {
+        this.submitCreatePost();
       }
     },
 
-    async submitCreateFile(){
-      try{
-        await this.createFile({postId: this.postId, file: this.selectedFile})
-      }catch (error){
+    async submitCreateFile() {
+      if (!this.isLoggedIn) {
+        await this.pushMessage({
+          content: '请先登录',
+        });
+        return;
+      }
+      try {
+        await this.createFile({ postId: this.postId, file: this.selectedFile });
+      } catch (error) {
         await this.pushMessage({ content: error.data.message });
       }
-    }
+    },
   },
 
-  components: { FileCreate, PostMeta, PostActions, PostContentField, PostTitleField, PostTagField },
+  components: {
+    FileCreate,
+    PostMeta,
+    PostActions,
+    PostContentField,
+    PostTitleField,
+    PostTagField,
+  },
 });
 </script>
 
 <style scoped>
-@import "./styles/post-create.css";
+@import './styles/post-create.css';
 </style>

@@ -4,7 +4,7 @@ import {
   AuthLoginStoreModule,
   AuthLoginStoreState,
 } from './login/auth-login.store';
-import { apiHttpClient } from '../app/app.service';
+import { apiHttpClient } from '@/app/app.service';
 
 export interface AuthStoreState {
   login: AuthLoginStoreState;
@@ -29,7 +29,7 @@ export const AuthStoreModule: Module<AuthStoreState, RootState> = {
    */
   getters: {
     isLoggedIn(state) {
-      return state.token ? true : false;
+      return !!state.token;
     },
   },
 
@@ -49,11 +49,12 @@ export const AuthStoreModule: Module<AuthStoreState, RootState> = {
     configApiHttpClientAuthHeader(_, data) {
       apiHttpClient.defaults.headers.common['Authorization'] = `Bearer ${data}`;
     },
-    logout({commit}){
-      commit('setToken', null)
-      commit('user/setCurrentUser', null, {root: true})
-      commit('auth/login/setLoginResponseData', null, {root: true})
-    }
+    logout({ commit }) {
+      commit('setToken', null);
+      commit('user/setCurrentUser', null, { root: true });
+      commit('auth/login/setLoginResponseData', null, { root: true });
+      apiHttpClient.defaults.headers.common['Authorization'] = '';
+    },
   },
 
   /**

@@ -38,12 +38,29 @@ export const appToolbarItemGuard = (
     showPostListLayoutSwitcher,
   );
 
-  appStore.commit(
-    'toolbar/setShowPostShowNavigator',
-    showPostShowNavigator,
-  );
+  appStore.commit('toolbar/setShowPostShowNavigator', showPostShowNavigator);
 
   appStore.commit('toolbar/setShowSideSheetItem', showSideSheetItem);
 
   next();
+};
+
+export const authGuard = (
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext,
+) => {
+  if (to.matched.some(record => record.meta.requireAuth)) {
+    if (!appStore.getters['auth/isLoggedIn']) {
+      appStore.dispatch('notification/pushMessage', {
+        content: '请先登录',
+      });
+
+      next({ name: 'login' });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
 };

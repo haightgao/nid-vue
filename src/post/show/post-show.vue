@@ -101,9 +101,11 @@ export default defineComponent({
       setPostTotalLikes: 'post/show/setPostTotalLikes',
       setPostTotalComments: 'post/show/setPostTotalComments',
     }),
+
     onClickPostShowMedia() {
       this.setLayout(`${this.layout ? '' : 'flow'}`);
     },
+
     onKeyUpWindow(event) {
       if (event.ctrlKey || event.metaKey) return;
 

@@ -1,13 +1,13 @@
 <template>
   <div class="post-show-file-meta">
-    <PostShowFileMetaKit :kit="kit" />
-    <PostShowFileMetaSpecs :specs="specs" />
+    <PostShowFileMetaKit :kit="kit" v-if="kit.length" />
+    <PostShowFileMetaSpecs :specs="specs" v-if="specs.length" />
   </div>
 </template>
 
 <script>
-import {defineComponent} from 'vue';
-import {mapGetters, mapActions} from 'vuex';
+import { defineComponent } from 'vue';
+import { mapGetters, mapActions } from 'vuex';
 import PostShowFileMetaKit from '@/post/show/components/post-show-file-meta-kit.vue';
 import PostShowFileMetaSpecs from '@/post/show/components/post-show-file-meta-specs.vue';
 
@@ -16,16 +16,16 @@ export default defineComponent({
 
   props: {
     post: {
-      type: Object
-    }
+      type: Object,
+    },
   },
 
   computed: {
     ...mapGetters({
       loading: 'file/show/loading',
       kit: 'file/show/kit',
-      specs: 'file/show/specs'
-    })
+      specs: 'file/show/specs',
+    }),
   },
 
   created() {
@@ -34,14 +34,14 @@ export default defineComponent({
 
   methods: {
     ...mapActions({
-      getFileById: 'file/show/getFileById'
-    })
+      getFileById: 'file/show/getFileById',
+    }),
   },
 
-  components: {PostShowFileMetaKit,PostShowFileMetaSpecs}
-})
+  components: { PostShowFileMetaKit, PostShowFileMetaSpecs },
+});
 </script>
 
 <style scoped>
-@import "./styles/post-show-file-meta.css";
+@import './styles/post-show-file-meta.css';
 </style>

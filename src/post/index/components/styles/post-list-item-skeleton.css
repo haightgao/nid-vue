@@ -2,7 +2,7 @@
   background: var(--skeleton-background);
 }
 
-.post-list-item.skeleton > .post-list-item-media:after {
+.post-list-item.skeleton > .post-list-item-media::after {
   display: block;
   content: ' ';
   padding-top: 66.66%;
@@ -27,11 +27,7 @@
   background: var(--skeleton-background);
 }
 
-.post-list-item.skeleton
-  > .post-list-item-content
-  > .header
-  > .actions
-  > .action {
+.post-list-item.skeleton > .post-list-item-content > .header > .actions > .action {
   width: 24px;
   height: 24px;
   background: var(--skeleton-background);

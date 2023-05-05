@@ -1,6 +1,6 @@
-import {Module} from 'vuex';
-import {RootState} from '@/app/app.store';
-import {apiHttpClient} from '@/app/app.service';
+import { Module } from 'vuex';
+import { RootState } from '@/app/app.store';
+import { apiHttpClient } from '@/app/app.service';
 
 export interface FileMetaData {
   id: number;
@@ -51,57 +51,71 @@ export const fileShowStoreModule: Module<FileShowStoreState, RootState> = {
     },
 
     // 设备信息
-    kit(state){
-      let kit: Array<MetaItem> = []
+    kit(state) {
+      let kit: Array<MetaItem> = [];
 
-      if(state.fileMetaData && state.fileMetaData.metaData){
+      if (state.fileMetaData && state.fileMetaData.metaData) {
         const {
           Make = '',
           Model = '',
           LensMake = '',
-          LensModel = ''
-        } = state.fileMetaData.metaData
+          LensModel = '',
+        } = state.fileMetaData.metaData;
 
         const camera = {
           title: '相机',
-          value: `${Make} ${Model}`.trim()
-        }
+          value: `${Make} ${Model}`.trim(),
+        };
 
         const lens = {
           title: '镜头',
-          value: `${LensMake} ${LensModel}`.trim()
-        }
+          value: `${LensMake} ${LensModel}`.trim(),
+        };
 
-        kit = [camera, lens]
+        kit = [camera, lens];
       }
 
-      return kit.filter(item => item.value !== '')
+      return kit.filter(item => item.value !== '');
     },
 
     // 拍摄参数信息
     specs(state) {
-      let specs: Array<MetaItem> = []
+      let specs: Array<MetaItem> = [];
 
-      if(state.fileMetaData && state.fileMetaData.metaData){
-        const {FocalLength,FNumber, ExposureTime, ISO} = state.fileMetaData.metaData
+      if (state.fileMetaData && state.fileMetaData.metaData) {
+        const {
+          FocalLength,
+          FNumber,
+          ExposureTime,
+          ISO,
+        } = state.fileMetaData.metaData;
 
-        specs = [{
-          title: '焦距',
-          value: FocalLength ? `${FocalLength}mm` : ''
-        },{
-          title: '光圈',
-          value: FNumber ? `f/${FNumber}` : ''
-        },{
-          title: '曝光',
-          value: ExposureTime > 1 ? `${ExposureTime}s` : `1/${Math.round(1/ExposureTime)}s`
-        },{
-          title: '感光',
-          value: `${ISO}`
-        }]
+        specs = [
+          {
+            title: '焦距',
+            value: FocalLength ? `${FocalLength}mm` : '',
+          },
+          {
+            title: '光圈',
+            value: FNumber ? `f/${FNumber}` : '',
+          },
+          {
+            title: '曝光',
+            value: ExposureTime
+              ? ExposureTime > 1
+                ? `${ExposureTime}s`
+                : `1/${Math.round(1 / ExposureTime)}s`
+              : '',
+          },
+          {
+            title: '感光',
+            value: `${ISO ? ISO : ''}`,
+          },
+        ];
       }
 
-      return specs.filter(item => item.value !== '')
-    }
+      return specs.filter(item => item.value !== '');
+    },
   },
 
   mutations: {
@@ -109,9 +123,9 @@ export const fileShowStoreModule: Module<FileShowStoreState, RootState> = {
       state.loading = data;
     },
 
-    setFileMetaData(state, data){
-      state.fileMetaData = data
-    }
+    setFileMetaData(state, data) {
+      state.fileMetaData = data;
+    },
   },
 
   actions: {
@@ -130,5 +144,5 @@ export const fileShowStoreModule: Module<FileShowStoreState, RootState> = {
         throw (error as any).response;
       }
     },
-  }
-}
+  },
+};
